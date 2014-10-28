@@ -26,12 +26,21 @@ h6 {
     font-weight: 400;
 }
 
+body>.navbar:first-child{
+    background: none;
+    border: none;
+}
+
+.contentWrapper{
+    background: url(../img/KA-1320_1920_bottom.jpg) no-repeat top center;
+}
+
 .intro-header {
     padding-top: 50px; /* If you're making other pages, make sure there is 50px of padding to make sure the navbar doesn't overlap content! */
     padding-bottom: 50px;
     text-align: center;
     color: #f8f8f8;
-    background: url(../img/intro-bg.jpg) no-repeat center center;
+    background: url(../img/KA-1320_1920_top.jpg) no-repeat top center;
     background-size: cover;
 }
 
@@ -90,7 +99,7 @@ h6 {
 
 .content-section-a {
     padding: 50px 0;
-    background-color: #f8f8f8;
+    background-color: rgba(248, 248, 248, 0.6);
 }
 
 .content-section-b {
