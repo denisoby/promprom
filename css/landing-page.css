@@ -41,13 +41,14 @@ body>.navbar:first-child{
     text-align: center;
     color: #f8f8f8;
     background: url(../img/KA-1320_1920_top.jpg) no-repeat top center;
+    height: 300px;
     background-size: cover;
 }
 
 .intro-message {
     position: relative;
-    padding-top: 20%;
-    padding-bottom: 20%;
+    /* padding-top: 80px; */
+    /* padding-bottom: 80px; */
 }
 
 .intro-message > h1 {
