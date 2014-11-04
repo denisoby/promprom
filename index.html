@@ -83,20 +83,20 @@
         <div class="container">
 
             <div class="row">
-                <div class="col-md-2">
-                    <img class="logo" src="/logo/murmanskaya_oblast.jpg" />
+                <div class="col-md-2 col-sm-2 col-sm-2">
+                    <img class="logo" src="/logo/murmanskaya_oblast.png" />
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-2 col-sm-2">
                     <img class="logo" src="/logo/za_rulem.jpg" />
                 </div>
-                <div class="col-md-2">
-                    <img class="logo" src="/logo/severstal.jpg" />
+                <div class="col-md-2 col-sm-2">
+                    <img class="logo" src="/logo/severstal.png" />
                 </div>
-                <div class="col-md-2">
-                    <img class="logo" src="/logo/olenegorsk.jpg" />
+                <div class="col-md-2 col-sm-2">
+                    <img class="logo" src="/logo/olenegorsk.png" />
                 </div>
-                <div class="col-md-4">
-                    <img class="img-responsive" src="/logo/logo_nedeli.jpg" />
+                <div class="col-md-4 col-sm-4">
+                    <img class="img-responsive" src="/logo/logo_nedeli.png" />
                 </div>
             </div>
             <div class="intro-text row">
@@ -128,7 +128,7 @@
                 <div class="col-lg-5 col-sm-6">
                 </div>
                 <div class="col-lg-5 col-lg-offset-2 col-sm-6">
-                    <a href="/img/soglashenie.jpg"><img class="img-responsive" src="/img/soglashenie.jpg" /></a>
+                    <a href="/img/soglashenie.jpg"><img class="img-responsive" src="/img/prevyu.png" /></a>
                 </div>
             </div>
 
@@ -144,23 +144,30 @@
 
             <div class="row">
                 <div class="col-lg-5 col-sm-6">
-                    <div class="bs-example">
+                    <div id="registration_form" class="registration_form">
                         <h3>Регистрация гостей - бесплатно</h3>
-                        <form role="form">
+                        <form action="mail.php" method="post" role="form">
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Email address</label>
-                                <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                                <label for="name">Наименование организации</label>
+                                <input type="email" class="form-control" id="name" placeholder="Наименование организации">
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputPassword1">Password</label>
-                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                                <label for="org_vid_deyat">Вид деятельности</label>
+                                <input type="text" class="form-control" id="org_vid_deyat" placeholder="Вид деятельности">
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputFile">File input</label>
-                                <input type="file" id="exampleInputFile">
-                                <p class="help-block">Example block-level help text here.</p>
+                                <label for="org_spisok_uchastnikov">Список участников - ФИО, должность</label>
+                                <textarea class="form-control" id="org_spisok_uchastnikov" placeholder="Список участников - ФИО, должность"></textarea>
                             </div>
-                            <button type="submit" class="btn btn-default">Отправить</button>
+                            <div class="form-group">
+                                <label for="phone">Контактный телефон</label>
+                                <input type="email" class="form-control" id="phone" placeholder="Контактный телефон">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" class="form-control" id="email" placeholder="Email">
+                            </div>
+                            <input type="submit" class="btn btn-default" value="Отправить"/>
                         </form>
                     </div>
                 </div>
@@ -277,6 +284,11 @@
 
     <!-- jQuery Version 1.11.0 -->
     <script src="js/jquery-1.11.0.js"></script>
+
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+
+    <!-- jQuery Version 1.11.0 -->
+    <script src="js/sendMail.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
