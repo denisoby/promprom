@@ -95,16 +95,16 @@
                 <div class="col-md-1 col-xs-3 col-sm-1">
                     <img class="logo" src="/logo/olenegorsk.png" />
                 </div>
-                <div class="col-md-4 col-xs-12 col-md-offset-2 col-sm-4 col-sm-offset-2">
+                <div class="col-md-3 col-xs-12 col-md-offset-3 col-sm-3 col-sm-offset-3">
                     <img class="img-responsive" src="/logo/logo_nedeli.png" />
                 </div>
             </div>
             <div class="intro-text row">
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
-                    <h1>Оленегорский промышленный форум 2014</h1>
+                    <h1 style="margin-top: 0">Оленегорский промышленный форум 2014</h1>
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
-                    <p>
+                    <p style="margin-top: 8px">
                         Форум проходит в дни  III Мурманской международной деловой недели и логотип недели, при поддержке Администрации г. Оленегорска,
                         Правительства Мурманской области и ОАО "Олкон" (Оленегорский ГОК).
                     </p>
@@ -146,28 +146,28 @@
                 <div class="col-lg-5 col-sm-6">
                     <div id="registration_form" class="registration_form">
                         <h3>Регистрация гостей - бесплатно</h3>
-                        <form action="mail.php" method="post" role="form">
+                        <form action="mail.php" method="post">
                             <div class="form-group">
                                 <label for="name">Наименование организации</label>
-                                <input type="email" class="form-control" id="name" placeholder="Наименование организации">
+                                <input type="text" class="form-control" name="name" placeholder="Наименование организации">
                             </div>
                             <div class="form-group">
                                 <label for="org_vid_deyat">Вид деятельности</label>
-                                <input type="text" class="form-control" id="org_vid_deyat" placeholder="Вид деятельности">
+                                <input type="text" class="form-control" name="org_vid_deyat" placeholder="Вид деятельности">
                             </div>
                             <div class="form-group">
                                 <label for="org_spisok_uchastnikov">Список участников - ФИО, должность</label>
-                                <textarea class="form-control" id="org_spisok_uchastnikov" placeholder="Список участников - ФИО, должность"></textarea>
+                                <textarea class="form-control" name="org_spisok_uchastnikov" placeholder="Список участников - ФИО, должность"></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="phone">Контактный телефон</label>
-                                <input type="email" class="form-control" id="phone" placeholder="Контактный телефон">
+                                <input class="form-control" name="phone" placeholder="Контактный телефон">
                             </div>
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" class="form-control" id="email" placeholder="Email">
+                                <input type="email" class="form-control" name="email" placeholder="Email">
                             </div>
-                            <input type="submit" class="btn btn-default" value="Отправить"/>
+                            <input type="submit" id="send_bnt" class="btn btn-default" value="Отправить"/>
                         </form>
                     </div>
                 </div>
@@ -175,10 +175,10 @@
                     <div style="line-height: 150%; font-size: 18px;">
 
                         <h3>Регистрация участников</h3>
-                        <p> Информацию по стоимости и условия для участния в форуме - вы можете получить, связавшись с
+                        <p> Информацию по стоимости и условия для участия в форуме - вы можете получить, связавшись с
                             Новиковым Алексеем Александровичем<br/>
-                            +7(981)761-33-89<br/>
                             +7(911)302-82-00<br/>
+                            +7(981)761-33-89<br/>
                             <a href="mailto:alexey@aprilcom.ru">alexey@aprilcom.ru</a>
                         </p>
 
@@ -286,6 +286,7 @@
     <script src="js/jquery-1.11.0.js"></script>
 
     <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+    <script src="http://zr51.ru/jquery.form.js"></script>
 
     <!-- jQuery Version 1.11.0 -->
     <script src="js/sendMail.js"></script>

@@ -1,9 +1,9 @@
 $(function () {
 
-    $("#registration_form").validate({
+    $("form").validate({
         //after validation
         submitHandler: function (form) {
-
+debugger;
             showSpinner();
             //we make ajax submit
             $(form).ajaxSubmit({success: function () {
@@ -21,7 +21,7 @@ $(function () {
             org_spisok_uchastnikov: {required: true}
         },
         messages: {
-            name: {required: "Введите имя"},
+            name: {required: "Введите наименование организации"},
             email: {required: "Введите e-mail", email: "Введите правильный e-mail" },
             phone: {required: "Введите телефон"},
             org_vid_deyat: {required: "Укажите вид деятельности"},
