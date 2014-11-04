@@ -38,11 +38,19 @@ body>.navbar:first-child{
 .intro-header {
     padding-top: 50px; /* If you're making other pages, make sure there is 50px of padding to make sure the navbar doesn't overlap content! */
     padding-bottom: 50px;
-    text-align: center;
-    color: #f8f8f8;
+    text-align: justify;
+    /* color: #f8f8f8; */
     background: url(../img/KA-1320_1920_top.jpg) no-repeat top center;
-    height: 300px;
+    height: 450px;
     background-size: cover;
+}
+
+.intro-header .logo{
+    width: 100%;
+}
+
+.intro-header .intro-text{
+    line-height: 150%;
 }
 
 .intro-message {
