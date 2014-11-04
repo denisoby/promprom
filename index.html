@@ -31,6 +31,7 @@
 
     <script>
         window.onload = function(){
+            //document.cookie = 'i_am_neo=1';
             if (document.cookie.indexOf('i_am_neo=1')<0){
                 var underConstruction = document.getElementById('underConstruction');
                 document.body.innerHTML = underConstruction.innerHTML;
@@ -46,7 +47,7 @@
         </div>
     </div>
     <!-- Navigation -->
-    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="display: none">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
@@ -126,13 +127,21 @@
 
             <div class="row">
                 <div class="col-lg-5 col-sm-6">
-                    <hr class="section-heading-spacer">
-                    <div class="clearfix"></div>
-                    <h2 class="section-heading">Death to the Stock Photo:<br>Special Thanks</h2>
-                    <p class="lead">A special thanks to <a target="_blank" href="http://join.deathtothestockphoto.com/">Death to the Stock Photo</a> for providing the photographs that you see in this template. Visit their website to become a member.</p>
+                    <div style="line-height: 150%">
+                        <ul>
+                            <li>Принять участие в Форуме в качестве гостя, Вы можете бесплатно, заполнив регистрационную
+                                формувнизу страницы.
+                            </li>
+                            <li> Для Участников Форума информацию по стоимости и условия вы можете получить связавщись с
+                                Новиковым Алексеем Александровичем по телефонам (м.тел: +7(981)761-33-89,
+                                +7(911)302-82-00),либо
+                                по электорнной почте e-mail: alexey@aprilcom.ru)
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="col-lg-5 col-lg-offset-2 col-sm-6">
-                    <img class="img-responsive" src="img/ipad.png" alt="">
+                    <a href="/img/soglashenie.jpg"><img class="img-responsive" src="/img/soglashenie.jpg" /></a>
                 </div>
             </div>
 
@@ -142,28 +151,6 @@
     </div>
     <!-- /.content-section-a -->
 
-    <div class="content-section-a">
-
-        <div class="container">
-
-            <div class="row">
-                <div class="col-lg-5 col-lg-offset-1 col-sm-push-6  col-sm-6">
-                    <hr class="section-heading-spacer">
-                    <div class="clearfix"></div>
-                    <h2 class="section-heading">3D Device Mockups<br>by PSDCovers</h2>
-                    <p class="lead">Turn your 2D designs into high quality, 3D product shots in seconds using free Photoshop actions by <a target="_blank" href="http://www.psdcovers.com/">PSDCovers</a>! Visit their website to download some of their awesome, free photoshop actions!</p>
-                </div>
-                <div class="col-lg-5 col-sm-pull-6  col-sm-6">
-                    <img class="img-responsive" src="img/dog.png" alt="">
-                </div>
-            </div>
-
-        </div>
-        <!-- /.container -->
-
-    </div>
-    <!-- /.content-section-b -->
-</div>
     <div class="content-section-a">
 
         <div class="container">
@@ -184,36 +171,69 @@
         <!-- /.container -->
 
     </div>
-    <!-- /.content-section-a -->
 
-    <div class="banner">
+    <div class="content-section-b">
 
         <div class="container">
 
             <div class="row">
-                <div class="col-lg-6">
-                    <h2>Connect to Start Bootstrap:</h2>
+                <div class="col-lg-12">
+                    <h2 class="section-heading">О мероприятии</h2>
+
+                    <div class="lead">
+                        <p>19-20 ноября 2014 года в городе Оленегорске в дни III Мурманской международной деловой недели
+                            пройдет Оленегорский промышленный Форум.</p>
+
+                        <p> Организаторами Форума выступили Администрация города Оленегорска с подведомственной
+                            территорией Мурманской области в лице Главы администрации Самарского Олега Григорьевича, ОАО
+                            «Олкон» в лице Генерального директора Попова Александра Николаевича и региональная редакция
+                            журнала «За рулем» в лице Генерального директора Новикова Алексея Александровича.</p>
+
+                        <p> Участники Форума – представители производителей и дилерских центров техники специального
+                            назначения, компании, оказывающие услуги в области промышленного сектора, компании
+                            представители финансового сектора, учебные заведения.</p>
+
+                        <p> Гости Форума – представители градообразующих промышленных предприятий, Главы областных
+                            городов, представители строительных компаний, промышленных предприятий, дорожно-ремонтных
+                            предприятий.</p>
+
+                        <p> Основные цели Форума:
+                        <ul>
+                            <li> Демонстрация горнодобывающей, строительной, дорожной техники, а также техники
+                                повышенной
+                                проходимости для условий севера с возможностью прохождения тест-драйва;
+                            </li>
+                            <li>
+                                Ознакомление представителей иногородних компаний с промышленным рынком Мурманской
+                                области,
+                                перспективами развития региона;
+                            </li>
+                            <li>Выявление потребностей и поиск путей их реализации между поставщиками и потребителями
+                                техники специального назначения;
+                            </li>
+                            <li>Демонстрация перспектив инвестиций в Мурманскую область путем открытия новых
+                                представительств и дилерских центов по продаже и обслуживанию техники специального
+                                назначения;
+                            </li>
+                            <li>Налаживание новых деловых контактов между гостями и участниками Форума.</li>
+                        </ul>
+                        </p>
+
+                        <p> Мероприятие будет проходить на площадке ОАО «Олкон» – карьер им. проф. Баумана Оленегорский
+                            ГОК и на территории МУК «МДЦ Полярная звезда» г. Оленегорск.</p>
+
+                        <p>По вопросам принятия участия в Оленегорском промышленном Форуме обращаться к Новикову
+                            Алексею Александровичу. (м.тел: +7(981)761-33-89, +7(911)302-82-00, e-mail:
+                            alexey@aprilcom.ru)</p>
+                    </div>
                 </div>
-                <div class="col-lg-6">
-                    <ul class="list-inline banner-social-buttons">
-                        <li>
-                            <a href="https://twitter.com/SBootstrap" class="btn btn-default btn-lg"><i class="fa fa-twitter fa-fw"></i> <span class="network-name">Twitter</span></a>
-                        </li>
-                        <li>
-                            <a href="https://github.com/IronSummitMedia/startbootstrap" class="btn btn-default btn-lg"><i class="fa fa-github fa-fw"></i> <span class="network-name">Github</span></a>
-                        </li>
-                        <li>
-                            <a href="#" class="btn btn-default btn-lg"><i class="fa fa-linkedin fa-fw"></i> <span class="network-name">Linkedin</span></a>
-                        </li>
-                    </ul>
-                </div>
+
             </div>
+            <!-- /.container -->
 
         </div>
-        <!-- /.container -->
-
+        <!-- /.content-section-b -->
     </div>
-    <!-- /.banner -->
 
     <!-- Footer -->
     <footer>
