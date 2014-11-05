@@ -120,6 +120,7 @@ body>.navbar:first-child{
 
 .text-about{
     background-color: rgba(231, 231, 231, 1);
+    text-align: justify;
 }
 
 .content-section-b {
