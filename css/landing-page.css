@@ -41,7 +41,7 @@ body>.navbar:first-child{
     text-align: justify;
     /* color: #f8f8f8; */
     background: url(../img/KA-1320_1920_top.jpg) no-repeat top center;
-    height: 450px;
+    height: 300px;
     background-size: cover;
 }
 
@@ -115,11 +115,11 @@ body>.navbar:first-child{
 
 .content-section-a {
     padding: 30px 0;
-    background-color: rgba(248, 248, 248, 0.75);
+    /* background-color: rgba(248, 248, 248, 0.75); */
 }
 
 .text-about{
-    background-color: #e7e7e7;
+    background-color: rgba(231, 231, 231, 1);
 }
 
 .content-section-b {
@@ -198,18 +198,32 @@ p.copyright {
 .registration_form{
     margin-right: 0;
     margin-left: 0;
-    /* background-color: #fff; */
+    background-color: rgba(248, 248, 248, 0.75);
     border-color: #ddd;
     border-width: 1px;
-    border-radius: 4px 4px 0 0;
+    border-radius: 10px;
     -webkit-box-shadow: none;
     box-shadow: none;
     /* position: relative; */
-    /* padding: 45px 15px 15px; */
+    padding: 15px;
     /* margin: 0 -15px 15px; */
     /* border-color: #e5e5e5 #eee #eee; */
     /* border-style: solid; */
     /* border-width: 1px 0; */
     /* -webkit-box-shadow: inset 0 3px 6px rgba(0,0,0,.05); */
     /* box-shadow: inset 0 3px 6px rgba(0,0,0,.05); */
+}
+
+.registration_form_participant{
+    line-height: 150%;
+    font-size: 18px;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: rgba(248, 248, 248, 0.75);
+}
+
+.prevyu{
+    float: left;
+
+    padding: 20px;
 }
