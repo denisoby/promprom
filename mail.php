@@ -6,8 +6,9 @@ class app{
     }
 }
 
+$to = "victoria@aprilcom.ru";
 //$to = "alenovikov@yandex.ru";
-$to = "denis.obydennykh@gmail.com";
+//$to = "denis.obydennykh@gmail.com";
 
 $from = "robot@murmansksite.ru";
 $subject = "Регистрация на мероприятие Promprom";
