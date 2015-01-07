@@ -3,7 +3,6 @@ $(function () {
     $("form").validate({
         //after validation
         submitHandler: function (form) {
-debugger;
             showSpinner();
             //we make ajax submit
             $(form).ajaxSubmit({success: function () {
