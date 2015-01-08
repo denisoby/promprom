@@ -5,6 +5,8 @@ var http = require('http')
     , crypto = require('crypto')
     , fs = require('fs')
 
+    , pageParserClass = require('./pageParserClass')
+
 
     cacheDir = './cache';
 
@@ -16,13 +18,15 @@ function crawlerClass(config) {
 
 crawlerClass.prototype.run = function () {
     var me = this;
-    me.pages.forEach(me.processPageType.bind(me));
+    me.pages.forEach(function(pageType) {
+        me.processPageType(pageType, me.config.descriptors);
+    });
 };
 
-crawlerClass.prototype.processPageType = function (pageType) {
+crawlerClass.prototype.processPageType = function (pageType, descriptors) {
     var me = this;
     pageType.urls.forEach(function (url) {
-        me.processUrl(url, pageType.descriptors);
+        me.processUrl(url, pageType.contains, descriptors);
     });
 };
 
@@ -108,17 +112,18 @@ crawlerClass.prototype.isUrlCached = function (url, callback) {
     fs.exists(cacheFile, callback);
 };
 
-crawlerClass.prototype.processPageInstance = function (page, descriptors, url) {
-    debugger;
+crawlerClass.prototype.processPageInstance = function (page, contains, descriptors, url) {
+    var pageParser = new pageParserClass(page, contains, descriptors, url);
+    pageParser.run();
 };
 
-crawlerClass.prototype.processUrl = function (url, descriptors) {
+crawlerClass.prototype.processUrl = function (url, contains, descriptors) {
     var me = this;
     /*
     todo remove debug - true
      */
     me.getUrl(url, false, function (page) {
-        me.processPageInstance(page, descriptors, url);
+        me.processPageInstance(page, contains, descriptors, url);
     });
 };
 

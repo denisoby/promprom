@@ -1,15 +1,15 @@
 var descriptors = {
     kamaz_list : {
-        query: ".table-technical-characteristics"
-        , header: {query: "tr:first-child th"}
+        context: ".table-technical-characteristics"
+        , header: {context: "tr:first-child th"}
         , contains: ["kamaz_list_entry"]
     }
     ,kamaz_list_entry : {
-        query: "tr:nth-child(n+3)"
+        context: "tr:nth-child(n+3)"
         , header: "parent.header"
         , contains:
         {
-            query: "td:nth-child(2)"
+            context: "td:nth-child(2)"
             , type: 'link'
             , contains: 'kamaz_model'
         }
@@ -24,8 +24,8 @@ var pages = [
         urls       : [
             'http://www.kamaz.ru/production/serial/samosvaly/'
         ],
-        descriptors: [
-            descriptors.kamaz_list
+        contains: [
+            "kamaz_list"
         ]
     }
 ];
