@@ -6,19 +6,15 @@
 var util = require("util")
     , events = require("events");
 
-function pageNodeClass($, parent, context, descriptor, descriptors) {
+function pageNodeClass($, parent, context, descriptorName, descriptors) {
     var me = this;
     events.EventEmitter.call(this);
-
-    var descriptorType = typeof descriptor;
-    if(descriptorType == 'string') {
-        descriptor = descriptors[descriptor];
-    }
 
     me.parent = parent;
     me.context = context;
 
-    me.descriptor = descriptor;
+    me.descriptorName = descriptorName;
+    me.descriptor = me.getDescriptorByName(descriptorName);
     me.descriptors = descriptors;
 
     me.children = [];
@@ -28,10 +24,7 @@ function pageNodeClass($, parent, context, descriptor, descriptors) {
 var prototype = pageNodeClass.prototype;
 
 prototype.run = function ($) {
-    var me = this
-        , $ = me.$
-        , descriptorObject
-        , descriptor;
+    var me = this;
 
     var contains = me.descriptor.contains;
     if (contains) {
@@ -45,6 +38,36 @@ prototype.run = function ($) {
     }
 };
 
+prototype.getDescriptorByName = function (descriptorName) {
+    var me = this
+        , descriptor;
+
+    if (typeof descriptorName == 'string') {
+        descriptor = me.descriptors[descriptorName];
+        if (!descriptor) {
+            /**
+             * the most primitive descriptor - string xpath selector,
+             * and we are making descriptor object now
+             */
+            descriptor = {
+                selector: descriptorName
+                , type  : 'text'
+            }
+        }
+    }
+    else {
+        /*
+         we got descriptor object
+         */
+        descriptor = descriptorName;
+        descriptorName = descriptor.name || descriptor.selector;
+    }
+
+    descriptor.name = descriptor.name || descriptorName;
+    descriptor.multiple = descriptor.multiple || false;
+
+};
+
 /**
  *
  * @param descriptorName - name of descriptor,
@@ -56,34 +79,10 @@ prototype.createChild = function (descriptorName) {
         , newChild
         , found
         , selector
-        , type
-        , property = 'text' //default property for to get value for primitives
-        , multiple = false
         , descriptor
         , context = me.context;
 
-    if (typeof item == 'string'){
-        descriptor = me.descriptors[descriptorName];
-        if (!descriptor){
-            /**
-             * the most primitive descriptor - string xpath selector,
-             * and we are making descriptor object now
-             */
-            descriptor = {
-                selector : descriptorName
-                , type : 'text'
-            }
-        }
-    }
-    else{
-        /*
-        we got descriptor object
-         */
-        descriptor = descriptorName;
-        descriptorName = descriptor.name || descriptor.selector;
-    }
-
-    descriptor.multiple = descriptor.multiple || false;
+    descriptor = me.getDescriptorByName(descriptorName);
 
     selector = descriptor.selector;
     found = $(selector, context);
@@ -101,7 +100,7 @@ prototype.createChild = function (descriptorName) {
                 me.childTree[descriptorName] = newChild;
             }
 
-
+            newChild.run();
         });
     }
     else{
