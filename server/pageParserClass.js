@@ -2,7 +2,8 @@
  * Created by denisobydennykh on 08.01.15.
  */
 
-var cheerio = require('cheerio');
+var cheerio = require('cheerio')
+    , pageNodeClass = require('./pageNodeClass');
 
 function pageParserClass(page, contains, descriptors, url){
     var me = this;
@@ -19,13 +20,16 @@ pageParserClass.prototype.run = function () {
 
     var $ = cheerio.load(me.page);
 
-    me.processNode($, {contains: me.contains}, null);
+    var rootNode = new pageNodeClass($, null, null, {contains: me.contains}, me.descriptors);
+    rootNode.run();
 };
 
+/*
 pageParserClass.prototype.processNode = function ($, nodeDescriptor, parent) {
     nodeDescriptor.contains.forEach(function (descriptorName) {
 
     });
 };
+*/
 
 module.exports = pageParserClass;
