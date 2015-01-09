@@ -5,17 +5,17 @@ var http = require('http')
     , crypto = require('crypto')
     , fs = require('fs')
 
-    , pageParserClass = require('./pageParserClass')
+//    , pageParserClass = require('./pageParserClass')
 
 
     cacheDir = './cache';
 
 function crawlerClass(config) {
     var me = this;
-    me.config = config;
-    me.pages = config.pages || [];
+    me.config = config || {};
 }
 
+/*
 crawlerClass.prototype.run = function () {
     var me = this;
     me.pages.forEach(function(pageType) {
@@ -30,24 +30,45 @@ crawlerClass.prototype.processPageType = function (pageType, descriptors) {
     });
 };
 
-crawlerClass.prototype.getUrl = function (url, disableCache, callback) {
+ crawlerClass.prototype.processPageInstance = function (page, contains, descriptors, url) {
+ var pageParser = new pageParserClass(page, contains, descriptors, url);
+ pageParser.run();
+ };
+
+ crawlerClass.prototype.processUrl = function (url, contains, descriptors) {
+ var me = this;
+ //todo remove debug - true
+ me.getUrl(url, false, function (page) {
+    me.processPageInstance(page, contains, descriptors, url);
+});
+};
+*/
+
+crawlerClass.prototype.getUrl = function (url, options, callback) {
     var me = this;
+    options = options || {};
+    var disableCache = options.disableCache || false;
+
     if (disableCache) {
-        me.getUrlByNet(url, disableCache, callback);
+        me.getUrlByNet(url, {disableCache:disableCache}, callback);
     } else {
         me.isUrlCached(url, function (exists) {
             if (exists) {
                 me.getUrlByCache(url, callback);
             }
             else {
-                me.getUrlByNet(url, disableCache, callback);
+                me.getUrlByNet(url, {disableCache: disableCache}, callback);
             }
         });
     }
 };
 
-crawlerClass.prototype.getUrlByNet = function (url, disableCache, callback) {
+crawlerClass.prototype.getUrlByNet = function (url, options, callback) {
     var me = this;
+
+    options = options || {};
+    var disableCache = options.disableCache || false;
+
     var content = '';
     http.get(url, function (response) {
         response.on('data', function( data ) {
@@ -110,21 +131,6 @@ crawlerClass.prototype.isUrlCached = function (url, callback) {
 
     var cacheFile = me.getUrlCachePath(url);
     fs.exists(cacheFile, callback);
-};
-
-crawlerClass.prototype.processPageInstance = function (page, contains, descriptors, url) {
-    var pageParser = new pageParserClass(page, contains, descriptors, url);
-    pageParser.run();
-};
-
-crawlerClass.prototype.processUrl = function (url, contains, descriptors) {
-    var me = this;
-    /*
-    todo remove debug - true
-     */
-    me.getUrl(url, false, function (page) {
-        me.processPageInstance(page, contains, descriptors, url);
-    });
 };
 
 module.exports = crawlerClass;

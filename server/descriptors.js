@@ -23,10 +23,9 @@ var descriptors = {
 
 var pages = [
     {
-        urls       : [
-            'http://www.kamaz.ru/production/serial/samosvaly/'
-        ],
-        contains: [
+        type: 'link'
+        , value : 'http://www.kamaz.ru/production/serial/samosvaly/'
+        , contains: [
             "kamaz_list"
         ]
     }

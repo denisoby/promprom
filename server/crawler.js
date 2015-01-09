@@ -5,9 +5,9 @@
 /*global require: false */
 
 var descriptors = require('./descriptors.js')
-    , crawlerClass = require('./crawlerClass.js');
+    , pageNodeClass = require('./pageNodeClass');
 
-debugger;
-var crawler = new crawlerClass(descriptors);
-crawler.run();
-
+var rootNode = new pageNodeClass(null, null, descriptors.pages[0], descriptors.descriptors);
+rootNode.onReady(function () {
+    rootNode.run();
+});

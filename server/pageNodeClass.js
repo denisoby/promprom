@@ -4,27 +4,57 @@
 'use strict';
 
 var util = require("util")
-    , events = require("events");
+    , cheerio = require('cheerio')
+    , events = require("events")
 
-function pageNodeClass($, parent, context, descriptorName, descriptors) {
+    , crawlerClass = require('./crawlerClass')
+    ;
+
+function pageNodeClass(parent, context, descriptorName, descriptors) {
     var me = this;
     events.EventEmitter.call(this);
 
     me.parent = parent;
     me.context = context;
 
+    me.descriptors = parent && parent.descriptors || descriptors;
     me.descriptorName = descriptorName;
     me.descriptor = me.getDescriptorByName(descriptorName);
-    me.descriptors = descriptors;
+
+    me.type = me.descriptor.type || 'defaultType';
 
     me.children = [];
     me.childTree = {};
+
+    /*
+    todo support get value from context
+     */
+    me.value = me.descriptor.value;
+
+    if (me.type == 'link') {
+        var crawler = new crawlerClass();
+        crawler.getUrl(me.value, null, function (page) {
+            me.$ = cheerio.load(page);
+            me.context = null;
+            me.emit('ready');
+        });
+    }
+    else{
+        me.$ = parent.$;
+        me.emit('ready');
+    }
 }
+
+util.inherits(pageNodeClass, events.EventEmitter);
 
 var prototype = pageNodeClass.prototype;
 
 prototype.run = function ($) {
     var me = this;
+
+    /*
+     var $ = cheerio.load(me.page);
+     */
 
     var contains = me.descriptor.contains;
     if (contains) {
@@ -66,6 +96,7 @@ prototype.getDescriptorByName = function (descriptorName) {
     descriptor.name = descriptor.name || descriptorName;
     descriptor.multiple = descriptor.multiple || false;
 
+    return descriptor;
 };
 
 /**
@@ -79,6 +110,7 @@ prototype.createChild = function (descriptorName) {
         , newChild
         , found
         , selector
+        , item
         , descriptor
         , context = me.context;
 
@@ -89,8 +121,11 @@ prototype.createChild = function (descriptorName) {
 
     if(found.length){
         console.log('Found elements with selector "' + selector + '"');
-        found.forEach(function (item) {
-            newChild = new pageNodeClass(me.$, me, item, descriptorName, me.descriptors);
+
+        for(var i=0; i < found.length; i++) {
+            item = found[i];
+
+            newChild = new pageNodeClass(me, item, descriptorName);
             me.children.push(newChild);
             if (descriptor.multiple) {
                 me.childTree[descriptorName] = me.childTree[descriptorName] || [];
@@ -100,12 +135,25 @@ prototype.createChild = function (descriptorName) {
                 me.childTree[descriptorName] = newChild;
             }
 
-            newChild.run();
-        });
+            /*
+             todo
+             1. events
+             2. values
+             */
+
+            newChild.onReady(function () {
+                newChild.run();
+            });
+        }
     }
     else{
 
     }
 };
 
-util.inherits(pageNodeClass, events.EventEmitter);
+prototype.onReady = function(listener) {
+    var me = this;
+    me.on('ready', listener);
+};
+
+module.exports = pageNodeClass;
