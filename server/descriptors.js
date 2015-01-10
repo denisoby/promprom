@@ -2,7 +2,7 @@ var descriptors = {
     kamaz_list : {
         selector: ".table-technical-characteristics"
         , header: {selector: "tr:first-child th"}
-        , contains: ["kamaz_list_entry"]
+        , contains: ["descriptor:kamaz_list_entry"]
     }
     ,kamaz_list_entry : {
         selector: "tr:nth-child(n+3)"
@@ -10,8 +10,9 @@ var descriptors = {
         , contains:
         {
             selector: "td:nth-child(2)"
+            , name: 'link_to_full'
             , type: 'link'
-            , contains: 'kamaz_model'
+            , contains: 'descriptor:kamaz_model'
         }
     }
 /*
@@ -26,7 +27,7 @@ var pages = [
         type: 'link'
         , value : 'http://www.kamaz.ru/production/serial/samosvaly/'
         , contains: [
-            "kamaz_list"
+            "descriptor:kamaz_list"
         ]
     }
 ];

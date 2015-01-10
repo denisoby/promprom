@@ -41,26 +41,30 @@ var prototype = pageNodeClass.prototype;
 prototype.runPromise = function () {
     var me = this;
 
-    console.log("starting element " + me.descriptor.name)
+    var message = "starting element " + me.descriptor.name;
+    console.log(message)
 
     return (new Promise(me.getPage.bind(me))).
         then(me.processContent.bind(me)).
-        then(console.log);
+        then(function (message) {
+            console.log(message);
+        });
 }
 
 prototype.getPage = function (resolve, reject) {
     var me = this;
 
+    me.$ = me.parent && me.parent.$;
+
     if (me.type == 'link') {
         var crawler = new crawlerClass();
-        crawler.getUrl(me.value, null, function (page) {
+        crawler.getUrl(me.getValue(), null, function (page) {
             me.$ = cheerio.load(page);
             me.context = null;
             resolve();
         });
     }
     else {
-        me.$ = me.parent.$;
         resolve();
     }
 };
@@ -71,17 +75,18 @@ prototype.processContent = function () {
     //complex object with child nodes
     if (me.descriptor.contains) {
         return me.processChildren().then(function () {
-            console.log("finished object: " + me.descriptor.name);
+            return  "finished object: " + me.descriptor.name;
         });
     }
     //primitive
     else{
-        return me.descriptor.name + " = " +  me.getValue();
+        return me.descriptor.name + " = " + me.getValue();
     }
 }
 
 prototype.getValue = function () {
-    return 'test';
+    var me = this;
+    return me.value || 'test';
 };
 
 prototype.processChildren = function () {
@@ -104,8 +109,14 @@ prototype.getDescriptorByName = function (descriptorName) {
         , descriptor;
 
     if (typeof descriptorName == 'string') {
-        descriptor = me.descriptors[descriptorName];
-        if (!descriptor) {
+        var prefix = 'descriptor:';
+        if (descriptorName.indexOf(prefix) === 0) {
+            descriptor = me.descriptors[descriptorName.replace(prefix,'')];
+            if (!descriptor) {
+                console.error(descriptorName + ' not found');
+                return null;
+            }
+        } else {
             /**
              * the most primitive descriptor - string xpath selector,
              * and we are making descriptor object now
@@ -148,13 +159,22 @@ prototype.createChild = function (descriptorName) {
 
     descriptor = me.getDescriptorByName(descriptorName);
 
+    if (!descriptor) {
+        return;
+    }
+
     selector = descriptor.selector;
     found = $(selector, context);
 
-    if(found.length){
-        console.log('Found elements with selector "' + selector + '"');
+    var length = found.length;
 
-        for(var i=0; i < found.length; i++) {
+    //todo remove debug
+    if (length > 2) {
+        length = 2;
+    }
+
+    if(length){
+        for(var i=0; i < length; i++) {
             item = found[i];
 
             newChild = new pageNodeClass(me, item, descriptorName);
