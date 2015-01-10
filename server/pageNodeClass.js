@@ -4,6 +4,7 @@
 'use strict';
 
 var util = require("util")
+    , url = require('url')
     , cheerio = require('cheerio')
     , events = require("events")
     , Promise = require('es6-promise').Promise
@@ -19,6 +20,7 @@ function pageNodeClass(parent, context, descriptorName, descriptors) {
     me.context = context;
 
     me.descriptors = parent && parent.descriptors || descriptors;
+    me.url = parent && parent.url;
     me.descriptorName = descriptorName;
     me.descriptor = me.getDescriptorByName(descriptorName);
 
@@ -53,13 +55,22 @@ prototype.runPromise = function () {
 
 prototype.getPage = function (resolve, reject) {
     var me = this;
+    var parent = me.parent;
 
-    me.$ = me.parent && me.parent.$;
+    me.$ = parent && parent.$;
 
     if (me.type == 'link') {
         var crawler = new crawlerClass();
-        crawler.getUrl(me.getValue(), null, function (page) {
+        var newUrl = me.getValue();
+
+        if (parent && parent.url) {
+            newUrl = url.resolve(parent.url.href, newUrl);
+        }
+
+        crawler.getUrl(newUrl, null, function (page) {
             me.$ = cheerio.load(page);
+            me.url = url.parse(newUrl);
+
             me.context = null;
             resolve();
         });
@@ -86,7 +97,8 @@ prototype.processContent = function () {
 
 prototype.getValue = function () {
     var me = this;
-    return me.value || 'test';
+    var val = me.value || me.$(me.context).attr(me.descriptor.attr);
+    return val;
 };
 
 prototype.processChildren = function () {
@@ -167,11 +179,6 @@ prototype.createChild = function (descriptorName) {
     found = $(selector, context);
 
     var length = found.length;
-
-    //todo remove debug
-    if (length > 2) {
-        length = 2;
-    }
 
     if(length){
         for(var i=0; i < length; i++) {

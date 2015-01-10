@@ -9,9 +9,10 @@ var descriptors = {
         , header: "parent.header"
         , contains:
         {
-            selector: "td:nth-child(2)"
+            selector: "td:nth-child(2) a"
             , name: 'link_to_full'
             , type: 'link'
+            , attr: 'href'
             , contains: 'descriptor:kamaz_model'
         }
     }
