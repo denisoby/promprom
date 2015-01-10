@@ -43,11 +43,9 @@ prototype.runPromise = function () {
 
     console.log("starting element " + me.descriptor.name)
 
-    new Promise(me.getPage.bind(me)).
+    return (new Promise(me.getPage.bind(me))).
         then(me.processContent.bind(me)).
-        then(function () {
-            console.log("finished element " + me.descriptor.name)
-        });
+        then(console.log);
 }
 
 prototype.getPage = function (resolve, reject) {
@@ -62,7 +60,7 @@ prototype.getPage = function (resolve, reject) {
         });
     }
     else {
-        me.$ = parent.$;
+        me.$ = me.parent.$;
         resolve();
     }
 };
@@ -72,11 +70,13 @@ prototype.processContent = function () {
 
     //complex object with child nodes
     if (me.descriptor.contains) {
-        return me.processChildren();
+        return me.processChildren().then(function () {
+            console.log("finished object: " + me.descriptor.name);
+        });
     }
     //primitive
     else{
-        return me.getValue();
+        return me.descriptor.name + " = " +  me.getValue();
     }
 }
 
