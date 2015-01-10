@@ -6,6 +6,7 @@
 var util = require("util")
     , cheerio = require('cheerio')
     , events = require("events")
+    , Promise = require('es6-promise').Promise
 
     , crawlerClass = require('./crawlerClass')
     ;
@@ -24,48 +25,78 @@ function pageNodeClass(parent, context, descriptorName, descriptors) {
     me.type = me.descriptor.type || 'defaultType';
 
     me.children = [];
+    me.childrenPromises = [];
     me.childTree = {};
 
     /*
     todo support get value from context
      */
     me.value = me.descriptor.value;
-
-    if (me.type == 'link') {
-        var crawler = new crawlerClass();
-        crawler.getUrl(me.value, null, function (page) {
-            me.$ = cheerio.load(page);
-            me.context = null;
-            me.emit('ready');
-        });
-    }
-    else{
-        me.$ = parent.$;
-        me.emit('ready');
-    }
 }
 
 util.inherits(pageNodeClass, events.EventEmitter);
 
 var prototype = pageNodeClass.prototype;
 
-prototype.run = function ($) {
+prototype.runPromise = function () {
     var me = this;
 
-    /*
-     var $ = cheerio.load(me.page);
-     */
+    console.log("starting element " + me.descriptor.name)
 
-    var contains = me.descriptor.contains;
-    if (contains) {
-        if (!util.isArray(contains)){
-            contains = [contains];
-        }
+    new Promise(me.getPage.bind(me)).
+        then(me.processContent.bind(me)).
+        then(function () {
+            console.log("finished element " + me.descriptor.name)
+        });
+}
 
-        contains.forEach(function (item) {
-            me.createChild(item);
+prototype.getPage = function (resolve, reject) {
+    var me = this;
+
+    if (me.type == 'link') {
+        var crawler = new crawlerClass();
+        crawler.getUrl(me.value, null, function (page) {
+            me.$ = cheerio.load(page);
+            me.context = null;
+            resolve();
         });
     }
+    else {
+        me.$ = parent.$;
+        resolve();
+    }
+};
+
+prototype.processContent = function () {
+    var me = this;
+
+    //complex object with child nodes
+    if (me.descriptor.contains) {
+        return me.processChildren();
+    }
+    //primitive
+    else{
+        return me.getValue();
+    }
+}
+
+prototype.getValue = function () {
+    return 'test';
+};
+
+prototype.processChildren = function () {
+    var me = this;
+
+    var contains = me.descriptor.contains;
+    if (!util.isArray(contains)){
+        contains = [contains];
+    }
+
+    contains.forEach(function (item) {
+        me.createChild(item);
+    });
+
+    return Promise.all(me.childrenPromises);
 };
 
 prototype.getDescriptorByName = function (descriptorName) {
@@ -90,7 +121,7 @@ prototype.getDescriptorByName = function (descriptorName) {
          we got descriptor object
          */
         descriptor = descriptorName;
-        descriptorName = descriptor.name || descriptor.selector;
+        descriptorName = descriptor.name || descriptor.selector || descriptor.value;
     }
 
     descriptor.name = descriptor.name || descriptorName;
@@ -108,6 +139,7 @@ prototype.createChild = function (descriptorName) {
     var me = this
         , $ = me.$
         , newChild
+        , newChildPromise
         , found
         , selector
         , item
@@ -135,15 +167,8 @@ prototype.createChild = function (descriptorName) {
                 me.childTree[descriptorName] = newChild;
             }
 
-            /*
-             todo
-             1. events
-             2. values
-             */
-
-            newChild.onReady(function () {
-                newChild.run();
-            });
+            newChildPromise = newChild.runPromise();
+            me.childrenPromises.push(newChildPromise);
         }
     }
     else{

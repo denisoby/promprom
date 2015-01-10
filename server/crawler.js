@@ -8,6 +8,4 @@ var descriptors = require('./descriptors.js')
     , pageNodeClass = require('./pageNodeClass');
 
 var rootNode = new pageNodeClass(null, null, descriptors.pages[0], descriptors.descriptors);
-rootNode.onReady(function () {
-    rootNode.run();
-});
+rootNode.run();
