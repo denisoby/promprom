@@ -29,11 +29,6 @@ function pageNodeClass(parent, context, descriptorName, descriptors) {
     me.children = [];
     me.childrenPromises = [];
     me.childTree = {};
-
-    /*
-    todo support get value from context
-     */
-    me.value = me.descriptor.value;
 }
 
 util.inherits(pageNodeClass, events.EventEmitter);
@@ -50,6 +45,7 @@ prototype.runPromise = function () {
         then(me.processContent.bind(me)).
         then(function (message) {
             console.log(message);
+            return me;
         });
 }
 
@@ -95,11 +91,61 @@ prototype.processContent = function () {
     }
 }
 
+prototype.isSimpleValue = function () {
+    var me = this;
+    return !!me.descriptor.contains;
+};
+
+prototype.getName = function () {
+    var me = this;
+    var selector = me.descriptor.valueNameSelector
+        , attr = me.descriptor.valueNameAttr || ""
+        , result = null;
+
+    if (selector || attr) {
+        this.descriptorName || me.getElementAttribute(selector, attr);
+    }
+
+    return result;
+};
+
+prototype.getElementAttribute = function (selector, attribute) {
+    var me = this;
+    var result = null;
+    attribute = attribute || "text";
+
+    if (me.$) {
+        result = me.$(selector, me.context).attr(attribute);
+    }
+
+    return result;
+};
+
 prototype.getValue = function () {
     var me = this;
-    var val = me.value || me.$(me.context).attr(me.descriptor.attr);
+    var val;
+
+    if (me.isSimpleValue()) {
+        val = me._getSimpleValue();
+    } else {
+        val = me._getChildTree();
+    }
     return val;
 };
+
+prototype._getSimpleValue = function () {
+    var me = this;
+
+    var selector = me.descriptor.valueSelector || "";
+    var val = me.getElementAttribute(selector, me.descriptor.valueAttr) || me.defaultValue;
+
+    return val;
+};
+
+prototype._getChildTree = function () {
+    var me = this;
+    return me.childTree;
+}
 
 prototype.processChildren = function () {
     var me = this;
@@ -186,20 +232,36 @@ prototype.createChild = function (descriptorName) {
 
             newChild = new pageNodeClass(me, item, descriptorName);
             me.children.push(newChild);
-            if (descriptor.multiple) {
-                me.childTree[descriptorName] = me.childTree[descriptorName] || [];
-                me.childTree[descriptorName].push(newChild);
-            }
-            else{
-                me.childTree[descriptorName] = newChild;
-            }
 
-            newChildPromise = newChild.runPromise();
+            newChildPromise = newChild.runPromise().then(function (childComplete) {
+                me.addChildToTree(childComplete);
+            });
+
             me.childrenPromises.push(newChildPromise);
         }
     }
     else{
 
+    }
+};
+
+prototype.addChildToTree = function (child) {
+    var me = this;
+    var descriptor = child.descriptor
+        , childName = child.descriptorName;
+
+    var namedList = me.descriptor.namedList !== false;
+    if (namedList) {
+        if (descriptor.multiple) {
+            me.childTree[childName] = me.childTree[childName] || [];
+            me.childTree[childName].push(child);
+        }
+        else {
+            me.childTree[childName] = child;
+        }
+    } else {
+        //todo Implement unnamed list
+        console.error("Implement unnamed list");
     }
 };
 

@@ -12,21 +12,43 @@ var descriptors = {
             selector: "td:nth-child(2) a"
             , name: 'link_to_full'
             , type: 'link'
-            , attr: 'href'
+            , valueAttr: 'href'
             , contains: 'descriptor:kamaz_model'
         }
     }
-/*
     ,kamaz_model : {
-        saveTo: "kamaz_samosval_src"
+        selector: ".r-col"
+        , valueNameSelector : '.title-b-page h1'
+        , contains: [
+            //images
+
+            , {
+                name: "Технические характеристики"
+                , selector : ".accordion-b ul"
+                , namedList: true
+                , contains: {
+                    name: "kamaz_model_techspec_group"
+                    , selector: "li"
+                    , valueNameSelector: "a.main-link"
+                    , namedList: true
+                    , multiple: true
+                    , contains: {
+                        selector: "tr"
+                        , valueNameSelector: "td:first-child"
+                        , valueSelector: "td:nth-child(2)"
+                        , multiple: true
+                        , name: "kamaz_model_techspec_item"
+                    }
+                }
+            }
+        ]
     }
-*/
 };
 
 var pages = [
     {
         type: 'link'
-        , value : 'http://www.kamaz.ru/production/serial/samosvaly/'
+        , defaultValue : 'http://www.kamaz.ru/production/serial/samosvaly/'
         , contains: [
             "descriptor:kamaz_list"
         ]
