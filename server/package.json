@@ -1,0 +1,11 @@
+{
+  "name": "Crawler",
+  "version": "0.0.1",
+  "description": "Data collecting utility for promprom.ru . Parses sites using config for each site",
+  "main": "crawler.js",
+  "dependencies": {
+    "iconv-lite" : "~0.4.5"
+    ,"cheerio": "~0.18.0"
+    ,"es6-promise": "~2.0.1"
+  }
+}

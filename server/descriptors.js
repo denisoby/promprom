@@ -110,11 +110,12 @@ var pages =     {
                 defaultValue: 'http://www.samosvalsaz.ru/production/samosvals.php',
                 contains    : ["descriptor:gaz_saz_list"],
                 charset     : 'windows-1251',
-                disabled : true
+                disabled : false
             }
             , {type         : 'link',
                 defaultValue: 'http://www.kamaz.ru/production/serial/samosvaly/',
-                contains    : ["descriptor:kamaz_list"]
+                contains    : ["descriptor:kamaz_list"],
+                disabled : false
             }
         ]
     }

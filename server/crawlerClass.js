@@ -4,7 +4,7 @@
 var http = require('http')
     , crypto = require('crypto')
     , fs = require('fs')
-    , iconv = require('iconv')
+    , iconv_lite = require('iconv-lite')
 
 //    , pageParserClass = require('./pageParserClass')
 
@@ -78,6 +78,13 @@ crawlerClass.prototype.getUrlByNet = function (url, options, callback) {
     var disableCache = options.disableCache || false;
 
     var content = "";
+
+    if (charset) {
+        if (!iconv_lite.encodingExists(charset)){
+            throw new Error("Charset not found: " + charset);
+        }
+    }
+
     http.get(url, function (response) {
         if (charset) {
             response.setEncoding('binary');
@@ -90,8 +97,7 @@ crawlerClass.prototype.getUrlByNet = function (url, options, callback) {
         response.on('end', function () {
             if (charset) {
                 content = new Buffer(content, 'binary');
-                var converter = new iconv.Iconv(charset, 'utf8');
-                content = converter.convert(content).toString();
+                content = iconv_lite.decode(content, charset)
             }
 
             if (!disableCache) {
