@@ -21,8 +21,8 @@ function pageNodeClass(parent, context, descriptorName, descriptors) {
 
     me.descriptors = parent && parent.descriptors || descriptors;
     me.url = parent && parent.url;
-    me.descriptorName = descriptorName;
     me.descriptor = me.getDescriptorByName(descriptorName);
+    me.descriptorName = me.descriptor.name;
 
     me.type = me.descriptor.type || 'defaultType';
 
@@ -42,7 +42,19 @@ prototype.runPromise = function () {
     console.log(message)
 
     return (new Promise(me.getPage.bind(me))).
+        catch(function (error) {
+            var component = "getPage";
+            console.log(component + " error: " + error)
+        }).
+        then(function () {
+            message = "name = " + me.getName();
+            console.log(message);
+        }).
         then(me.processContent.bind(me)).
+        catch(function (error) {
+            var component = "processContent";
+            console.log(component + " error: " + error)
+        }).
         then(function (message) {
             console.log(message);
             return me;
@@ -57,7 +69,7 @@ prototype.getPage = function (resolve, reject) {
 
     if (me.type == 'link') {
         var crawler = new crawlerClass();
-        var newUrl = me.getValue();
+        var newUrl = me._getSimpleValue();
 
         if (parent && parent.url) {
             newUrl = url.resolve(parent.url.href, newUrl);
@@ -82,12 +94,12 @@ prototype.processContent = function () {
     //complex object with child nodes
     if (me.descriptor.contains) {
         return me.processChildren().then(function () {
-            return  "finished object: " + me.descriptor.name;
+            return  "finished object: " + me.getName();
         });
     }
     //primitive
     else{
-        return me.descriptor.name + " = " + me.getValue();
+        return me.getName() + " = " + me.getValue();
     }
 }
 
@@ -100,22 +112,33 @@ prototype.getName = function () {
     var me = this;
     var selector = me.descriptor.valueNameSelector
         , attr = me.descriptor.valueNameAttr || ""
-        , result = null;
+        , name = null;
 
     if (selector || attr) {
-        this.descriptorName || me.getElementAttribute(selector, attr);
+        name = me.getElementAttribute(selector, attr);
     }
 
-    return result;
+
+    name = name || this.descriptorName;
+
+    return name;
 };
 
 prototype.getElementAttribute = function (selector, attribute) {
     var me = this;
     var result = null;
-    attribute = attribute || "text";
 
     if (me.$) {
-        result = me.$(selector, me.context).attr(attribute);
+        if (selector) {
+            var element = me.$(selector, me.context);
+            if (attribute) {
+                result = element.attr(attribute);
+            } else {
+                result = element.text();
+            }
+        } else {
+            result = me.$(me.context).attr(attribute);
+        }
     }
 
     return result;
@@ -137,7 +160,7 @@ prototype._getSimpleValue = function () {
     var me = this;
 
     var selector = me.descriptor.valueSelector || "";
-    var val = me.getElementAttribute(selector, me.descriptor.valueAttr) || me.defaultValue;
+    var val = me.getElementAttribute(selector, me.descriptor.valueAttr) || me.descriptor.defaultValue;
 
     return val;
 };
@@ -190,7 +213,7 @@ prototype.getDescriptorByName = function (descriptorName) {
          we got descriptor object
          */
         descriptor = descriptorName;
-        descriptorName = descriptor.name || descriptor.selector || descriptor.value;
+        descriptorName = descriptor.name || descriptor.selector || descriptor.defaultValue;
     }
 
     descriptor.name = descriptor.name || descriptorName;
