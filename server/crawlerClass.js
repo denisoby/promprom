@@ -4,6 +4,7 @@
 var http = require('http')
     , crypto = require('crypto')
     , fs = require('fs')
+    , iconv = require('iconv')
 
 //    , pageParserClass = require('./pageParserClass')
 
@@ -47,17 +48,23 @@ crawlerClass.prototype.processPageType = function (pageType, descriptors) {
 crawlerClass.prototype.getUrl = function (url, options, callback) {
     var me = this;
     options = options || {};
+    var charset = options.charset;
     var disableCache = options.disableCache || false;
 
+    var netOptions = {
+        charset       : charset
+        , disableCache: disableCache
+    };
+
     if (disableCache) {
-        me.getUrlByNet(url, {disableCache:disableCache}, callback);
+        me.getUrlByNet(url, netOptions, callback);
     } else {
         me.isUrlCached(url, function (exists) {
             if (exists) {
                 me.getUrlByCache(url, callback);
             }
             else {
-                me.getUrlByNet(url, {disableCache: disableCache}, callback);
+                me.getUrlByNet(url, netOptions, callback);
             }
         });
     }
@@ -67,15 +74,25 @@ crawlerClass.prototype.getUrlByNet = function (url, options, callback) {
     var me = this;
 
     options = options || {};
+    var charset = options.charset;
     var disableCache = options.disableCache || false;
 
-    var content = '';
+    var content = "";
     http.get(url, function (response) {
+        if (charset) {
+            response.setEncoding('binary');
+        }
+
         response.on('data', function( data ) {
             content += data;
         });
 
         response.on('end', function () {
+            if (charset) {
+                content = new Buffer(content, 'binary');
+                var converter = new iconv.Iconv(charset, 'utf8');
+                content = converter.convert(content).toString();
+            }
 
             if (!disableCache) {
                 me.cacheUrl(url, content, callback);
