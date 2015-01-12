@@ -103,10 +103,21 @@ var descriptors = {
 
 };
 
-var pages = [
-        { type: 'link', defaultValue : 'http://www.samosvalsaz.ru/production/samosvals.php', contains: ["descriptor:gaz_saz_list"], charset: 'windows-1251'}
-    //{ type: 'link', defaultValue : 'http://www.kamaz.ru/production/serial/samosvaly/', contains: ["descriptor:kamaz_list"]}
-];
+var pages =     {
+        name: "all"
+        , contains: [
+            {type           : 'link',
+                defaultValue: 'http://www.samosvalsaz.ru/production/samosvals.php',
+                contains    : ["descriptor:gaz_saz_list"],
+                charset     : 'windows-1251'
+            }
+            , {type         : 'link',
+                defaultValue: 'http://www.kamaz.ru/production/serial/samosvaly/',
+                contains    : ["descriptor:kamaz_list"]
+            }
+        ]
+    }
+    ;
 
 module.exports = {
     pages : pages

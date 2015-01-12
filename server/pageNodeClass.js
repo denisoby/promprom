@@ -264,27 +264,37 @@ prototype.createChild = function (descriptorName) {
         return;
     }
 
+    function createChildInstance(item){
+        newChild = new pageNodeClass(me, item, descriptorName);
+        me.children.push(newChild);
+
+        newChildPromise = newChild.runPromise().then(function (childComplete) {
+            me.addChildToTree(childComplete);
+        });
+
+        me.childrenPromises.push(newChildPromise);
+    }
+
     selector = descriptor.selector;
-    found = $(selector, context);
+    if (selector) {
+        found = $(selector, context);
 
-    var length = found.length;
+        var length = found.length;
 
-    if(length){
-        for(var i=0; i < length; i++) {
-            item = found[i];
-
-            newChild = new pageNodeClass(me, item, descriptorName);
-            me.children.push(newChild);
-
-            newChildPromise = newChild.runPromise().then(function (childComplete) {
-                me.addChildToTree(childComplete);
-            });
-
-            me.childrenPromises.push(newChildPromise);
+        if (length) {
+            for (var i = 0; i < length; i++) {
+                item = found[i];
+                createChildInstance(item);
+            }
         }
+        else {
+
+        }
+    } else if (descriptor.defaultValue){
+        createChildInstance(null);
     }
     else{
-
+        console.error("No selector and no default value for " + descriptor.name);
     }
 };
 
