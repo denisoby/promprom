@@ -39,24 +39,24 @@ prototype.runPromise = function () {
     var me = this;
 
     var message = "starting element " + me.descriptor.name;
-    console.log(message)
+    //console.log(message)
 
     return (new Promise(me.getPage.bind(me))).
         catch(function (error) {
             var component = "getPage";
-            console.log(component + " error: " + error)
+            //console.log(component + " error: " + error)
         }).
         then(function () {
             message = "name = " + me.getName();
-            console.log(message);
+            //console.log(message);
         }).
         then(me.processContent.bind(me)).
         catch(function (error) {
             var component = "processContent";
-            console.log(component + " error: " + error)
+            //console.log(component + " error: " + error)
         }).
         then(function (message) {
-            console.log(message);
+            //console.log(message);
             return me;
         });
 }
@@ -270,23 +270,40 @@ prototype.createChild = function (descriptorName) {
     }
 };
 
+prototype.isNamedList = function () {
+    var me = this;
+    return me.descriptor.namedList !== false;
+};
+
+prototype.isMultiple = function () {
+    var me = this;
+    return me.descriptor.multiple !== false;
+};
+
 prototype.addChildToTree = function (child) {
     var me = this;
     var descriptor = child.descriptor
-        , childName = child.descriptorName;
+        , childName = child.getName()
+        , childValue = child.getValue();
 
-    var namedList = me.descriptor.namedList !== false;
-    if (namedList) {
-        if (descriptor.multiple) {
-            me.childTree[childName] = me.childTree[childName] || [];
-            me.childTree[childName].push(child);
+    if (child.isNamedList() || child.isSimpleValue()) {
+        var oldValue = me.childTree[childName];
+        if (typeof  oldValue == "undefined"){
+            me.childTree[childName] = childValue;
         }
-        else {
-            me.childTree[childName] = child;
+        else{
+            var message = "Page " + child.url.href + "\n" +
+                "duplicate entry " + me.getName() + " -> " + child.getName() +
+                " (old value = '" + oldValue + "' new value = '" + childValue + "'";
+            if (!child.descriptor.valueNameSelector) {
+                message += " Maybe not set valueNameSelector?";
+            }
+            console.error(message);
         }
-    } else {
-        //todo Implement unnamed list
-        console.error("Implement unnamed list");
+    }
+    else {
+        me.childTree[childName] = me.childTree[childName] || [];
+        me.childTree[childName].push(childValue);
     }
 };
 

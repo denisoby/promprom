@@ -11,6 +11,9 @@ var rootNode = new pageNodeClass(null, null, descriptors.pages[0], descriptors.d
 rootNode.runPromise().
     then(function () {
         console.log("Done!");
+        var value = rootNode.getValue();
+        debugger;
+        JSON.stringify(value, null, "\t");
     }).
     catch(function (error) {
         console.error(error);
