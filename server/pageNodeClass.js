@@ -61,6 +61,11 @@ prototype.runPromise = function () {
             var component = "processContent";
             //console.log(component + " error: " + error)
         }).
+        then(function () {
+            //todo check for memory leaks
+//            me.$ = null;
+//            me.context = null;
+        }).
         then(function (message) {
             //console.log(message);
             return me;
@@ -81,7 +86,10 @@ prototype.getPage = function (resolve, reject) {
             newUrl = url.resolve(parent.url.href, newUrl);
         }
 
-        crawler.getUrl(newUrl, null, function (page) {
+        debugger;
+        crawler.getUrl(newUrl, {
+            charset: me.descriptor.charset
+        }, function (page) {
             me.$ = cheerio.load(page);
             me.url = url.parse(newUrl);
 
@@ -157,6 +165,7 @@ prototype.getValue = function () {
     var val;
 
     if (me.isSimpleValue()) {
+        debugger;
         val = me._getSimpleValue();
     } else {
         val = me._getChildTree();
@@ -169,6 +178,15 @@ prototype._getSimpleValue = function () {
 
     var selector = me.descriptor.valueSelector || "";
     var val = me.getElementAttribute(selector, me.descriptor.valueAttr) || me.descriptor.defaultValue;
+
+    /*
+     todo remove kostyl
+     link is loaded and context is dropped - that's why value is not available
+     */
+    if (!val && me.context == null && me.type == 'link'){
+        val = me.url.href;
+    }
+
 
     return val;
 };
@@ -293,6 +311,7 @@ prototype.isPassValuesToParent = function () {
 
 prototype.addChildToTree = function (child, skippedParent) {
     var me = this;
+
     if (child.isPassValuesToParent()) {
         for (var i = 0; i < child.children.length; i++) {
             me.addChildToTree(child.children[i], child);
@@ -304,13 +323,15 @@ prototype.addChildToTree = function (child, skippedParent) {
 
         if (child.isNamedList() || child.isSimpleValue()) {
             var oldValue = me.childTree[childName];
+
             if (typeof  oldValue == "undefined") {
                 me.childTree[childName] = childValue;
             }
             else {
+                debugger;
                 var message = "Page " + child.url.href + "\n" +
                 "duplicate entry " + me.getName() + " -> " + child.getName() +
-                skippedParent ? " from skipped " + skippedParent.getName() : "" +
+                (skippedParent ? " from skipped " + skippedParent.getName() : "") +
                 " (old value = '" + oldValue + "' new value = '" + childValue + "'";
                 if (!child.descriptor.valueNameSelector) {
                     message += " Maybe not set valueNameSelector?";
