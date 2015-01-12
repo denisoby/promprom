@@ -260,7 +260,7 @@ prototype.createChild = function (descriptorName) {
 
     descriptor = me.getDescriptorByName(descriptorName);
 
-    if (!descriptor) {
+    if (!descriptor || descriptor.disabled === true) {
         return;
     }
 
