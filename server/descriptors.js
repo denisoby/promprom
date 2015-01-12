@@ -59,24 +59,24 @@ var descriptors = {
         selector: ".products"
         //todo remove debug
         , contains: ["descriptor:gaz_saz_list_entry"]
-        //, passValuesToParent : true
-        //, namedList : true
+        , passValuesToParent : true
+        , namedList : true
         , valueNameSelector: "h1"
     }
     ,gaz_saz_list_entry : {
         selector: "tr"
         , namedList : false
-//        , passValuesToParent : true
+        , passValuesToParent : true
         , contains:
         {
-            selector: "a"
+            selector: "td a"
             , name: 'link_to_full_gaz_saz'
             , namedList : false
             , type: 'link'
             , valueAttr: 'href'
             , charset: 'windows-1251'
-//            , passValuesToParent : true
-//            , contains: 'descriptor:gaz_saz_model'
+            , passValuesToParent : true
+            , contains: 'descriptor:gaz_saz_model'
         }
     }
     ,gaz_saz_model : {
@@ -85,7 +85,7 @@ var descriptors = {
         , contains: [
             {
                 name: "Технические характеристики"
-                , selector : ".data_title"
+                , selector : ".data_table"
                 , namedList: true
                 , contains: {
                     selector: "tr"
@@ -94,13 +94,10 @@ var descriptors = {
                     , name: "gaz_saz_model_techspec_item"
                 }
             }
-            /*
              ,{
              name: "Описание"
              , selector: ".description"
              }
-             */
-
         ]
     }
 

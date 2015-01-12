@@ -86,7 +86,6 @@ prototype.getPage = function (resolve, reject) {
             newUrl = url.resolve(parent.url.href, newUrl);
         }
 
-        debugger;
         crawler.getUrl(newUrl, {
             charset: me.descriptor.charset
         }, function (page) {
@@ -145,15 +144,11 @@ prototype.getElementAttribute = function (selector, attribute) {
     var result = null;
 
     if (me.$) {
-        if (selector) {
-            var element = me.$(selector, me.context);
-            if (attribute) {
-                result = element.attr(attribute);
-            } else {
-                result = element.text();
-            }
+        var element = selector ? me.$(selector, me.context) : me.$(me.context);
+        if (attribute) {
+            result = element.attr(attribute);
         } else {
-            result = me.$(me.context).attr(attribute);
+            result = element.text();
         }
     }
 
@@ -165,7 +160,6 @@ prototype.getValue = function () {
     var val;
 
     if (me.isSimpleValue()) {
-        debugger;
         val = me._getSimpleValue();
     } else {
         val = me._getChildTree();
@@ -328,7 +322,6 @@ prototype.addChildToTree = function (child, skippedParent) {
                 me.childTree[childName] = childValue;
             }
             else {
-                debugger;
                 var message = "Page " + child.url.href + "\n" +
                 "duplicate entry " + me.getName() + " -> " + child.getName() +
                 (skippedParent ? " from skipped " + skippedParent.getName() : "") +
