@@ -91,21 +91,23 @@ prototype.getPage = function (resolve, reject) {
 prototype.processContent = function () {
     var me = this;
 
-    //complex object with child nodes
-    if (me.descriptor.contains) {
+    if (me.isSimpleValue()) {
+        //primitive
+        var name = me.getName();
+        var value = me.getValue();
+        return name + " = " + value;
+    }
+    else{
+        //complex object with child nodes
         return me.processChildren().then(function () {
             return  "finished object: " + me.getName();
         });
-    }
-    //primitive
-    else{
-        return me.getName() + " = " + me.getValue();
     }
 }
 
 prototype.isSimpleValue = function () {
     var me = this;
-    return !!me.descriptor.contains;
+    return !me.descriptor.contains;
 };
 
 prototype.getName = function () {
