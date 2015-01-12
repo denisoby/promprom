@@ -3,6 +3,12 @@
  */
 'use strict';
 
+/*
+ kamaz
+ Page http://www.kamaz.ru/production/serial/samosvaly/kamaz-65201-73(2)/
+ duplicate entry Весовые параметры и нагрузки -> нагрузка на первую и вторую оси, кг (old value = '15000' new value = '7480'
+ */
+
 var util = require("util")
     , url = require('url')
     , cheerio = require('cheerio')
@@ -280,30 +286,42 @@ prototype.isMultiple = function () {
     return me.descriptor.multiple !== false;
 };
 
-prototype.addChildToTree = function (child) {
+prototype.isPassValuesToParent = function () {
     var me = this;
-    var descriptor = child.descriptor
-        , childName = child.getName()
-        , childValue = child.getValue();
+    return me.descriptor.passValuesToParent;
+};
 
-    if (child.isNamedList() || child.isSimpleValue()) {
-        var oldValue = me.childTree[childName];
-        if (typeof  oldValue == "undefined"){
-            me.childTree[childName] = childValue;
-        }
-        else{
-            var message = "Page " + child.url.href + "\n" +
-                "duplicate entry " + me.getName() + " -> " + child.getName() +
-                " (old value = '" + oldValue + "' new value = '" + childValue + "'";
-            if (!child.descriptor.valueNameSelector) {
-                message += " Maybe not set valueNameSelector?";
-            }
-            console.error(message);
+prototype.addChildToTree = function (child, skippedParent) {
+    var me = this;
+    if (child.isPassValuesToParent()) {
+        for (var i = 0; i < child.children.length; i++) {
+            me.addChildToTree(child.children[i], child);
         }
     }
     else {
-        me.childTree[childName] = me.childTree[childName] || [];
-        me.childTree[childName].push(childValue);
+        var childName = child.getName()
+            , childValue = child.getValue();
+
+        if (child.isNamedList() || child.isSimpleValue()) {
+            var oldValue = me.childTree[childName];
+            if (typeof  oldValue == "undefined") {
+                me.childTree[childName] = childValue;
+            }
+            else {
+                var message = "Page " + child.url.href + "\n" +
+                "duplicate entry " + me.getName() + " -> " + child.getName() +
+                skippedParent ? " from skipped " + skippedParent.getName() : "" +
+                " (old value = '" + oldValue + "' new value = '" + childValue + "'";
+                if (!child.descriptor.valueNameSelector) {
+                    message += " Maybe not set valueNameSelector?";
+                }
+                console.error(message);
+            }
+        }
+        else {
+            me.childTree[childName] = me.childTree[childName] || [];
+            me.childTree[childName].push(childValue);
+        }
     }
 };
 

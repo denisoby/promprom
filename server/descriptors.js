@@ -3,12 +3,14 @@ var descriptors = {
         selector: ".table-technical-characteristics"
         , header: {selector: "tr:first-child th"}
         , contains: ["descriptor:kamaz_list_entry"]
+        , passValuesToParent : true
     }
     ,kamaz_list_entry : {
         selector: "tr:nth-child(n+3)"
         , header: "parent.header"
         , namedList : false
 //        , multiple: true
+        , passValuesToParent : true
         , contains:
         {
             selector: "td:nth-child(2) a"
@@ -16,6 +18,7 @@ var descriptors = {
             , namedList : false
             , type: 'link'
             , valueAttr: 'href'
+            , passValuesToParent : true
             , contains: 'descriptor:kamaz_model'
         }
     }
