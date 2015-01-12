@@ -144,6 +144,7 @@ prototype.getElementAttribute = function (selector, attribute) {
     var result = null;
 
     if (me.$) {
+        debugger;
         var element = selector ? me.$(selector, me.context) : me.$(me.context);
         if (attribute) {
             result = element.attr(attribute);
