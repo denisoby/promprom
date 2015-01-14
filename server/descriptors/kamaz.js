@@ -11,7 +11,7 @@ module.exports = {
         kamaz_list: {
             selector: ".table-technical-characteristics"
             , contains: ["descriptor:kamaz_list_entry"]
-            , passValuesToParent: true
+            //, passValuesToParent: true
         }
         , kamaz_list_entry: {
             selector: "tr:nth-child(n+3)"
@@ -23,7 +23,7 @@ module.exports = {
                 , namedList: false
                 , type: 'link'
                 , valueAttr: 'href'
-                , passValuesToParent: true
+                //, passValuesToParent: true
                 , contains: 'descriptor:kamaz_model'
             }
         }
@@ -31,24 +31,24 @@ module.exports = {
             selector: ".r-col"
             , valueNameSelector: '.title-b-page h1'
             , contains: [
-                //images
-
-                , {
+                // uncomment to get bug
+                //,
+                {
                     name: "Технические характеристики"
                     , selector: ".accordion-b ul"
                     , namedList: true
                     , contains: {
-                        name: "kamaz_model_techspec_group"
-                        , selector: "li"
-                        , valueNameSelector: "a.main-link"
-                        , namedList: true
-                        , contains: {
-                            selector: "tr"
-                            , valueNameSelector: "td:first-child"
-                            , valueSelector: "td:nth-child(2)"
-                            , name: "kamaz_model_techspec_item"
-                        }
+                    name: "kamaz_model_techspec_group"
+                    , selector: "li"
+                    , valueNameSelector: "a.main-link"
+                    , namedList: true
+                    , contains: {
+                        selector: "tr"
+                        , valueNameSelector: "td:first-child"
+                        , valueSelector: "td:nth-child(2)"
+                        , name: "kamaz_model_techspec_item"
                     }
+                }
                 }
             ]
         }

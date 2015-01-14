@@ -5,7 +5,7 @@ module.exports = {
             defaultValue: 'http://www.samosvalsaz.ru/production/samosvals.php',
             contains: ["descriptor:gaz_saz_list"],
             charset: 'windows-1251',
-            disabled: false
+            disabled: true
         }
     ]
     , descriptors: {

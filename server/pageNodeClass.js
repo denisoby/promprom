@@ -114,6 +114,9 @@ prototype.processContent = function () {
         //complex object with child nodes
         return me.processChildren().then(function () {
             return  "finished object: " + me.getName();
+        }).catch(function (error) {
+            console.error("Error processing children");
+            console.error(error);
         });
     }
 }
@@ -144,7 +147,7 @@ prototype.getElementAttribute = function (selector, attribute) {
     var result = null;
 
     if (me.$) {
-        debugger;
+
         var element = selector ? me.$(selector, me.context) : me.$(me.context);
         if (attribute) {
             result = element.attr(attribute);
@@ -289,7 +292,7 @@ prototype.createChild = function (descriptorName) {
             }
         }
         else {
-
+            console.log("0 found for: " + descriptor.name + " : " + selector);
         }
     } else if (descriptor.defaultValue){
         createChildInstance(null);
