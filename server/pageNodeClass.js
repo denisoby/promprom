@@ -284,7 +284,7 @@ prototype.createChild = function (descriptorName) {
     }
 
     selector = descriptor.selector;
-    if (selector) {
+    if (me.$ && selector) {
         found = $(selector, context);
 
         var length = found.length;
