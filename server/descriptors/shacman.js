@@ -7,20 +7,33 @@ module.exports = {
         {
             type: 'link',
             defaultValue: 'http://www.shacmanmotor.com/products_1_18.html',
-            contains: ["descriptor:shacman_list"],
+            contains: ["descriptor:shacman_page"],
             disabled: false
         }
     ]
     , descriptors: {
-        shacman_list: {
-            selector: ".tup"
+        shacman_page:{
+            selector: "table[width='674']"
+            , valueNameSelector: ".bt"
+            , contains: ["descriptor:shacman_list"] //, "descriptor:shacman_pages"
+        }
+        ,shacman_list: {
+            selector:  ".tup"
             , contains: ["descriptor:shacman_list_entry"]
-            , passValuesToParent: true
+            , namedList: false
+            //, passValuesToParent: true
+        }
+        , shacman_pagination: {
+            selector: ".middle div:nth-child(2) table"
+            , contains: {
+                selector: "a"
+            }
         }
         , shacman_list_entry: {
             selector: "li"
             , namedList: false
-            , passValuesToParent: true
+            , valueNameSelector: "p a"
+            //, passValuesToParent: true
             , contains: {
                 selector: "p a"
                 , name: 'link_to_full_shacman'
@@ -29,6 +42,9 @@ module.exports = {
                 , valueAttr: 'href'
                 , passValuesToParent: true
                 , contains: 'descriptor:shacman_model'
+
+                //todo remove debug
+                ,disabled: true
             }
         }
         , shacman_model: {
