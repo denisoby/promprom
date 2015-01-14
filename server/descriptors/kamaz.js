@@ -4,7 +4,7 @@ module.exports = {
             type: 'link',
             defaultValue: 'http://www.kamaz.ru/production/serial/samosvaly/',
             contains: ["descriptor:kamaz_list"],
-            disabled: false
+            disabled: true
         }
     ]
     , descriptors: {

@@ -8,21 +8,21 @@ module.exports = {
             type: 'link',
             defaultValue: 'http://www.shacmanmotor.com/products_1_18.html',
             contains: ["descriptor:shacman_list"],
-            disabled: true
+            disabled: false
         }
     ]
     , descriptors: {
         shacman_list: {
-            selector: ".content"
+            selector: ".tup"
             , contains: ["descriptor:shacman_list_entry"]
             , passValuesToParent: true
         }
         , shacman_list_entry: {
-            selector: ".catalog-category-section"
+            selector: "li"
             , namedList: false
             , passValuesToParent: true
             , contains: {
-                selector: ".title a"
+                selector: "p a"
                 , name: 'link_to_full_shacman'
                 , namedList: false
                 , type: 'link'
@@ -32,14 +32,12 @@ module.exports = {
             }
         }
         , shacman_model: {
-            selector: "#main"
-            , valueNameSelector: '.right-nav li:first-child a'
+            selector: "table[width='680']"
+            , valueNameSelector: 'h3'
             , contains: [
-                //images
-
-                , {
+                {
                     name: "Технические характеристики"
-                    , selector: ".article table"
+                    , selector: "tr:nth-child(2) table"
                     , namedList: true
                     , contains: {
                         selector: "tr"
