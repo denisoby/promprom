@@ -4,7 +4,7 @@
 
 /*global require: false */
 
-var descriptors = require('./descriptors.js')
+var descriptors = require('./descriptors/descriptors.js')
     , pageNodeClass = require('./pageNodeClass');
 
 var rootNode = new pageNodeClass(null, null, descriptors.pages, descriptors.descriptors);
