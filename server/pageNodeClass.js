@@ -213,6 +213,10 @@ prototype.getDescriptorByName = function (descriptorName) {
     var me = this
         , descriptor;
 
+    if (descriptorName === undefined) {
+        debugger;
+    }
+
     if (typeof descriptorName == 'string') {
         var prefix = 'descriptor:';
         if (descriptorName.indexOf(prefix) === 0) {
