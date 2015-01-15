@@ -64,14 +64,17 @@ prototype.runPromise = function () {
                 me.childrenPage = page;
                 return me.processContent();
             }
+            else{
+                me.childTree = null;
+            }
         }).
-        then(function () {
+        then(function (message) {
+            //console.log(message);
             //todo check for memory leaks
 //            me.$ = null;
 //            me.context = null;
         }).
-        then(function (message) {
-            //console.log(message);
+        then(function () {
             return me;
         });
 }
@@ -258,10 +261,6 @@ prototype.getDescriptorByName = function (descriptorName) {
     var me = this
         , descriptor;
 
-    if (descriptorName === undefined) {
-        debugger;
-    }
-
     if (typeof descriptorName == 'string') {
         var prefix = 'descriptor:';
         if (descriptorName.indexOf(prefix) === 0) {
@@ -378,6 +377,12 @@ prototype.addChildToTree = function (child, skippedParent) {
     else {
         var childName = child.getName()
             , childValue = child.getValue();
+
+        if (!child.isSimpleValue() && !child.childTree){
+            //child tree will be null for skipped links that wwere already processed
+            return;
+        }
+
 
         if (child.isNamedList() || child.isSimpleValue()) {
             var oldValue = me.childTree[childName];

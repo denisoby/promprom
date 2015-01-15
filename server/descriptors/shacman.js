@@ -3,17 +3,10 @@ var linkDescriptor = {
     , selector    : 'a'
     , defaultValue: 'http://www.shacmanmotor.com/products_1_18.html'
     , contains    : ["descriptor:shacman_page"]
-    , disabled    : false
+    , disabled    : true
     , valueNameAttr: 'href'
+    , passValuesToParent: true
 };
-
-var linkDescriptor2 = {
-    type          : 'link'
-    , selector    : 'a'
-    , disabled    : false
-    , valueNameAttr: 'href'
-};
-
 
 module.exports = {
     pages: [
@@ -27,35 +20,33 @@ module.exports = {
                 "descriptor:shacman_list" ,
                 "descriptor:shacman_pagination"
             ]
-        }
+            , passValuesToParent: true
+    }
         , shacman_list: {
             selector: ".tup"
             , contains: ["descriptor:shacman_list_entry"]
             , namedList: false
-            //, passValuesToParent: true
+            , passValuesToParent: true
         }
         , shacman_pagination: {
             selector: "div>ul>table"
             , contains: linkDescriptor
             , namedList: true
-
-        }
+            , passValuesToParent: true
+    }
         , shacman_list_entry: {
             selector: "li"
             , namedList: false
             , valueNameSelector: "p a"
-            //, passValuesToParent: true
+            , passValuesToParent: true
             , contains: {
                 selector: "p a"
                 , name: 'link_to_full_shacman'
                 , namedList: false
                 , type: 'link'
                 , valueAttr: 'href'
-                //, passValuesToParent: true
+                , passValuesToParent: true
                 , contains: 'descriptor:shacman_model'
-
-                //todo remove debug
-                , disabled: false
             }
         }
         , shacman_model: {
