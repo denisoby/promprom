@@ -18,15 +18,22 @@ var util = require("util")
     , crawlerClass = require('./crawlerClass')
     ;
 
-function pageNodeClass(parent, context, descriptorName, descriptors) {
+function pageNodeClass(parent, page, descriptorName, descriptors) {
     var me = this;
     events.EventEmitter.call(this);
 
+    processed urls global index
+
     me.parent = parent;
-    me.context = context;
+
+    me.page = page || {
+        context : null
+        , $: null
+        , url: null};
+
+    me.childrenPage = me.page;
 
     me.descriptors = parent && parent.descriptors || descriptors;
-    me.url = parent && parent.url;
     me.descriptor = me.getDescriptorByName(descriptorName);
     me.descriptorName = me.descriptor.name;
 
@@ -48,19 +55,12 @@ prototype.runPromise = function () {
     //console.log(message)
 
     return (new Promise(me.getPage.bind(me))).
-        catch(function (error) {
-            var component = "getPage";
-            //console.log(component + " error: " + error)
-        }).
-        then(function () {
+        then(function (page) {
+            me.childrenPage = page;
             message = "name = " + me.getName();
             //console.log(message);
         }).
         then(me.processContent.bind(me)).
-        catch(function (error) {
-            var component = "processContent";
-            //console.log(component + " error: " + error)
-        }).
         then(function () {
             //todo check for memory leaks
 //            me.$ = null;
@@ -80,24 +80,36 @@ prototype.getPage = function (resolve, reject) {
 
     if (me.type == 'link') {
         var crawler = new crawlerClass();
+
+        if (!me._getSimpleValue()) {
+            debugger;
+        }
+
         var newUrl = me._getSimpleValue();
 
-        if (parent && parent.url) {
-            newUrl = url.resolve(parent.url.href, newUrl);
+        var pageUrl = parent.page.url
+            , parentHref = pageUrl && pageUrl.href;
+
+
+        if (parentHref) {
+            newUrl = url.resolve(parentHref, newUrl);
         }
 
         crawler.getUrl(newUrl, {
             charset: me.descriptor.charset
-        }, function (page) {
-            me.$ = cheerio.load(page);
-            me.url = url.parse(newUrl);
+        }, function (pageHTML) {
 
-            me.context = null;
-            resolve();
+            var page = {
+                $: cheerio.load(pageHTML)
+                , context: null
+                , url: url.parse(newUrl)
+            };
+
+            resolve(page);
         });
     }
     else {
-        resolve();
+        resolve(me.page);
     }
 };
 
@@ -115,6 +127,7 @@ prototype.processContent = function () {
         return me.processChildren().then(function () {
             return  "finished object: " + me.getName();
         }).catch(function (error) {
+            me;
             console.error("Error processing children");
             console.error(error);
         });
@@ -136,6 +149,13 @@ prototype.getName = function () {
         name = me.getElementAttribute(selector, attr);
     }
 
+    /*
+     todo remove kostyl
+     link is loaded and context is dropped - that's why value is not available
+     */
+    if (!name && me.page.context == null && me.type == 'link'){
+        name = me.page.url && me.page.url.href || me.descriptor.defaultValue;
+    }
 
     name = name || this.descriptorName;
 
@@ -144,13 +164,28 @@ prototype.getName = function () {
 
 prototype.getElementAttribute = function (selector, attribute) {
     var me = this;
-    var result = null;
+    var result = null
+        , $ = me.page.$;
 
-    if (me.$) {
+    if ($) {
 
-        var element = selector ? me.$(selector, me.context) : me.$(me.context);
+        var context = me.page.context;
+        var element = selector ? $(selector, context) : $(context);
+
+        //todo replace link hacks
+        if (me.type == 'link' && !attribute) {
+            attribute = 'href';
+        }
+
+
         if (attribute) {
             result = element.attr(attribute);
+
+
+            if (me.type == 'link' && result && me.page.url) {
+                result = url.resolve(me.page.url.href, result);
+            }
+
         } else {
             result = element.text();
         }
@@ -181,8 +216,11 @@ prototype._getSimpleValue = function () {
      todo remove kostyl
      link is loaded and context is dropped - that's why value is not available
      */
-    if (!val && me.context == null && me.type == 'link'){
-        val = me.url.href;
+    if (!val && me.page.context == null && me.type == 'link'){
+        val = me.page.url.href;
+    }
+    if (me.type == 'link' && val && me.page.url) {
+        val = url.resolve(me.page.url.href, val);
     }
 
 
@@ -257,14 +295,15 @@ prototype.getDescriptorByName = function (descriptorName) {
  */
 prototype.createChild = function (descriptorName) {
     var me = this
-        , $ = me.$
         , newChild
         , newChildPromise
         , found
         , selector
         , item
         , descriptor
-        , context = me.context;
+        , $ = me.childrenPage.$
+        , url = me.childrenPage.url
+        , context = me.childrenPage.context;
 
     descriptor = me.getDescriptorByName(descriptorName);
 
@@ -272,8 +311,8 @@ prototype.createChild = function (descriptorName) {
         return;
     }
 
-    function createChildInstance(item){
-        newChild = new pageNodeClass(me, item, descriptorName);
+    function createChildInstance(foundItem){
+        newChild = new pageNodeClass(me, {$: $, context: foundItem, url: url}, descriptorName);
         me.children.push(newChild);
 
         newChildPromise = newChild.runPromise().then(function (childComplete) {
@@ -284,7 +323,7 @@ prototype.createChild = function (descriptorName) {
     }
 
     selector = descriptor.selector;
-    if (me.$ && selector) {
+    if ($ && selector) {
         found = $(selector, context);
 
         var length = found.length;
@@ -340,12 +379,13 @@ prototype.addChildToTree = function (child, skippedParent) {
                 me.childTree[childName] = childValue;
             }
             else {
-                var message = "Page " + child.url.href + "\n" +
+                var message = "Page " + child.page.url.href + "\n" +
                 "duplicate entry " + me.getName() + " -> " + child.getName() +
                 (skippedParent ? " from skipped " + skippedParent.getName() : "") +
                 " (old value = '" + oldValue + "' new value = '" + childValue + "'";
                 if (!child.descriptor.valueNameSelector) {
                     message += " Maybe not set valueNameSelector?";
+
                 }
                 console.error(message);
             }
