@@ -7,12 +7,14 @@
 var descriptors = require('./descriptors/descriptors.js')
     , pageNodeClass = require('./pageNodeClass');
 
+/*
 починить маз и урал
 добавить
 белаз
 хово
 зил
 краз http://www.autokraz.com.ua/index.php/uk/produktsiya/automobile/civil/samoskidi
+*/
 
 
 var rootNode = new pageNodeClass(null, null, descriptors.pages, descriptors.descriptors);

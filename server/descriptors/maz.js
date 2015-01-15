@@ -4,7 +4,7 @@ module.exports = {
             type: 'link',
             defaultValue: 'http://maz.by/ru/products/cargo_vehicle/dump_vehicles/',
             contains: ["descriptor:maz_list"],
-            disabled: true
+            disabled: false
         }
     ]
     , descriptors: {
@@ -31,9 +31,7 @@ module.exports = {
             selector: ".b-ic__right"
             , valueNameSelector: 'h1'
             , contains: [
-                //images
-
-                , {
+                {
                     name: "Технические характеристики"
                     , selector: ".b-c__info"
                     , namedList: true
