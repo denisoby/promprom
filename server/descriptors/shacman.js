@@ -24,7 +24,7 @@ module.exports = {
             selector: "table[width='674']"
             , valueNameSelector: ".bt"
             , contains: [
-                //"descriptor:shacman_list" ,
+                "descriptor:shacman_list" ,
                 "descriptor:shacman_pagination"
             ]
         }
@@ -36,7 +36,9 @@ module.exports = {
         }
         , shacman_pagination: {
             selector: "div>ul>table"
-            , contains: linkDescriptor2
+            , contains: linkDescriptor
+            , namedList: true
+
         }
         , shacman_list_entry: {
             selector: "li"
@@ -49,11 +51,11 @@ module.exports = {
                 , namedList: false
                 , type: 'link'
                 , valueAttr: 'href'
-                , passValuesToParent: true
+                //, passValuesToParent: true
                 , contains: 'descriptor:shacman_model'
 
                 //todo remove debug
-                , disabled: true
+                , disabled: false
             }
         }
         , shacman_model: {
@@ -74,4 +76,4 @@ module.exports = {
             ]
         }
     }
-}
+};

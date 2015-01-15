@@ -22,9 +22,10 @@ function pageNodeClass(parent, page, descriptorName, descriptors) {
     var me = this;
     events.EventEmitter.call(this);
 
-    processed urls global index
-
     me.parent = parent;
+
+    //to avoid circular links
+    me.linksIndex = parent && parent.linksIndex || [];
 
     me.page = page || {
         context : null
@@ -56,11 +57,14 @@ prototype.runPromise = function () {
 
     return (new Promise(me.getPage.bind(me))).
         then(function (page) {
-            me.childrenPage = page;
             message = "name = " + me.getName();
             //console.log(message);
+
+            if (page) {
+                me.childrenPage = page;
+                return me.processContent();
+            }
         }).
-        then(me.processContent.bind(me)).
         then(function () {
             //todo check for memory leaks
 //            me.$ = null;
@@ -81,10 +85,6 @@ prototype.getPage = function (resolve, reject) {
     if (me.type == 'link') {
         var crawler = new crawlerClass();
 
-        if (!me._getSimpleValue()) {
-            debugger;
-        }
-
         var newUrl = me._getSimpleValue();
 
         var pageUrl = parent.page.url
@@ -95,18 +95,25 @@ prototype.getPage = function (resolve, reject) {
             newUrl = url.resolve(parentHref, newUrl);
         }
 
-        crawler.getUrl(newUrl, {
-            charset: me.descriptor.charset
-        }, function (pageHTML) {
+        if (me.linksIndex.indexOf(newUrl) < 0) {
+            me.linksIndex.push(newUrl);
 
-            var page = {
-                $: cheerio.load(pageHTML)
-                , context: null
-                , url: url.parse(newUrl)
-            };
+            crawler.getUrl(newUrl, {
+                charset: me.descriptor.charset
+            }, function (pageHTML) {
 
-            resolve(page);
-        });
+                var page = {
+                    $        : cheerio.load(pageHTML)
+                    , context: null
+                    , url    : url.parse(newUrl)
+                };
+
+                resolve(page);
+            });
+        } else {
+            //page is already processed
+            resolve(null);
+        }
     }
     else {
         resolve(me.page);
@@ -385,6 +392,7 @@ prototype.addChildToTree = function (child, skippedParent) {
                 " (old value = '" + oldValue + "' new value = '" + childValue + "'";
                 if (!child.descriptor.valueNameSelector) {
                     message += " Maybe not set valueNameSelector?";
+                    child.getValue();
 
                 }
                 console.error(message);
