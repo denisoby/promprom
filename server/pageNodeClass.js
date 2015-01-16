@@ -83,6 +83,7 @@ prototype.getPage = function (resolve, reject) {
     var me = this;
     var parent = me.parent;
 
+    //todo remove and verify
     me.$ = parent && parent.$;
 
     if (me.type == 'link') {
@@ -155,7 +156,10 @@ prototype.getName = function () {
         , attr = me.descriptor.valueNameAttr || ""
         , name = null;
 
-    if (selector || attr) {
+    if (typeof selector == "function"){
+        return selector.apply(this);
+    }
+    else if (selector || attr) {
         name = me.getElementAttribute(selector, attr);
     }
 
@@ -393,7 +397,7 @@ prototype.addChildToTree = function (child, skippedParent) {
     }
 };
 
-prototype.onReady = function(listener) {
+prototype.findPrevious = function() {
     var me = this;
     me.on('ready', listener);
 };

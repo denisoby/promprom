@@ -4,7 +4,7 @@ module.exports = {
             type: 'link',
             defaultValue: 'http://www.belaz.by/catalog/products/dumpcrosscountry/',
             contains: ["descriptor:belaz_list"],
-            disabled: true
+            disabled: false
         }
     ]
     , descriptors: {
@@ -42,12 +42,34 @@ module.exports = {
             name: "Технические характеристики"
             , selector: ".catalog-series-tab"
             , valueNameSelector: ".catalog-series>h1:first-child"
-            , debug: true
+            , debug: false
             , namedList: false
             , contains: {
                 name: "belaz_model_techspec_group"
-                , selector: "table"
-                , namedList: false
+                , selector: "div.catalog-series-67 table"
+                , namedList: true
+                , valueNameSelector: function(){
+                    var context, header, text;
+
+                    var checkContexts = [this.page.context, this.page.context.prev, this.page.context.prev.prev, this.page.context.prev.prev.prev, this.page.context.parent.prev];
+
+                    for(var i=0; i<checkContexts.length; i++) {
+                        context = checkContexts[i];
+                        header = this.page.$(".catalog-series-point", context);
+                        if (header.length) {
+                            text = header.text().trim();
+                            if (text){
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!text) {
+                        debugger;
+                    }
+
+                    return text;
+                }
                 , contains: {
                     selector: "tr"
                     , valueNameSelector: "td:first-child"
