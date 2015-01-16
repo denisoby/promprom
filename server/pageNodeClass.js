@@ -288,6 +288,10 @@ prototype.getDescriptorByName = function (descriptorName) {
         descriptorName = descriptor.name || descriptor.selector || descriptor.defaultValue;
     }
 
+    if (descriptor.debug) {
+        debugger;
+    }
+
     descriptor.name = descriptor.name || descriptorName;
     descriptor.multiple = descriptor.multiple || false;
 

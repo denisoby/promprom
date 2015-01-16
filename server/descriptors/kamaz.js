@@ -38,17 +38,17 @@ module.exports = {
                     , selector: ".accordion-b ul"
                     , namedList: true
                     , contains: {
-                    name: "kamaz_model_techspec_group"
-                    , selector: "li"
-                    , valueNameSelector: "a.main-link"
-                    , namedList: true
-                    , contains: {
-                        selector: "tr"
-                        , valueNameSelector: "td:first-child"
-                        , valueSelector: "td:nth-child(2)"
-                        , name: "kamaz_model_techspec_item"
+                        name: "kamaz_model_techspec_group"
+                        , selector: "li"
+                        , valueNameSelector: "a.main-link"
+                        , namedList: true
+                        , contains: {
+                            selector: "tr"
+                            , valueNameSelector: "td:first-child"
+                            , valueSelector: "td:nth-child(2)"
+                            , name: "kamaz_model_techspec_item"
+                        }
                     }
-                }
                 }
             ]
         }
