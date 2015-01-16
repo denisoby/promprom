@@ -159,14 +159,6 @@ prototype.getName = function () {
         name = me.getElementAttribute(selector, attr);
     }
 
-    /*
-     todo remove kostyl
-     link is loaded and context is dropped - that's why value is not available
-     */
-    if (!name && me.page.context == null && me.type == 'link'){
-        name = me.page.url && me.page.url.href || me.descriptor.defaultValue;
-    }
-
     name = name || this.descriptorName;
 
     return name;
@@ -190,7 +182,6 @@ prototype.getElementAttribute = function (selector, attribute) {
 
         if (attribute) {
             result = element.attr(attribute);
-
 
             if (me.type == 'link' && result && me.page.url) {
                 result = url.resolve(me.page.url.href, result);
@@ -221,18 +212,6 @@ prototype._getSimpleValue = function () {
 
     var selector = me.descriptor.valueSelector || "";
     var val = me.getElementAttribute(selector, me.descriptor.valueAttr) || me.descriptor.defaultValue;
-
-    /*
-     todo remove kostyl
-     link is loaded and context is dropped - that's why value is not available
-     */
-    if (!val && me.page.context == null && me.type == 'link'){
-        val = me.page.url.href;
-    }
-    if (me.type == 'link' && val && me.page.url) {
-        val = url.resolve(me.page.url.href, val);
-    }
-
 
     return val;
 };
