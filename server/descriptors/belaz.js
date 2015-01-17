@@ -11,7 +11,7 @@ module.exports = {
         belaz_list: {
             selector: ".catalog"
             , contains: ["descriptor:belaz_list_entry"]
-            //, passValuesToParent: true
+            , passValuesToParent: true
         }
         , belaz_list_entry: {
             selector: ".catalog-item"
@@ -23,7 +23,7 @@ module.exports = {
                 , namedList: false
                 , type: 'link'
                 , valueAttr: 'href'
-                //, passValuesToParent: true
+                , passValuesToParent: true
                 , contains: 'descriptor:belaz_model'
             }
         }
@@ -36,6 +36,7 @@ module.exports = {
                 , type: 'link'
                 , namedList: false
                 , contains: "descriptor:belaz_modification"
+                , passValuesToParent: true
             }
         }
         , belaz_modification: {
@@ -49,23 +50,32 @@ module.exports = {
                 , selector: "div.catalog-series-67 table"
                 , namedList: true
                 , valueNameSelector: function(){
-                    var context, header, text;
+                    var context = this.page.context
+                        , headerContext
+                        , $ = this.page.$
+                        , headerClass = 'catalog-series-point'
+                        , header
+                        , text;
 
-                    var checkContexts = [this.page.context, this.page.context.prev, this.page.context.prev.prev, this.page.context.prev.prev.prev, this.page.context.parent.prev];
+                    var checkContexts = [context.parent.prev, context.prev && context.prev.prev];
 
                     for(var i=0; i<checkContexts.length; i++) {
-                        context = checkContexts[i];
-                        header = this.page.$(".catalog-series-point", context);
-                        if (header.length) {
-                            text = header.text().trim();
-                            if (text){
-                                break;
-                            }
+                        headerContext = checkContexts[i];
+                        if ($(headerContext).hasClass(headerClass)){
+                            header = $(headerContext);
+                        }
+                        else{
+                            header = $(headerContext).find("." + headerClass);
+                        }
+
+                        if (header && header.length){
+                            text = header.text();
+                            break;
                         }
                     }
 
-                    if (!text) {
-                        debugger;
+                    if (!text && text !== '') {
+                        throw "Text for belaz not found";
                     }
 
                     return text;
