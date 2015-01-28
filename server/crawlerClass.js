@@ -85,6 +85,7 @@ crawlerClass.prototype.getUrlByNet = function (url, options, callback) {
         }
     }
 
+    console.log('Starting page download: ' + url);
     http.get(url, function (response) {
         if (charset) {
             response.setEncoding('binary');
@@ -95,6 +96,7 @@ crawlerClass.prototype.getUrlByNet = function (url, options, callback) {
         });
 
         response.on('end', function () {
+            console.log('Got page: ' + url);
             if (charset) {
                 content = new Buffer(content, 'binary');
                 content = iconv_lite.decode(content, charset)
