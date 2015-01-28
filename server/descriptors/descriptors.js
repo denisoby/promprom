@@ -18,7 +18,7 @@ var pages = {
     ]
 };
 
-var marks = ['kamaz', 'ural', 'maz', 'gaz_saz', 'shacman', 'belaz']
+var marks = ['kamaz', 'ural', 'maz', 'gaz_saz', 'shacman', 'belaz', 'kraz']
     , markInfo;
 
 marks.forEach(function (mark) {

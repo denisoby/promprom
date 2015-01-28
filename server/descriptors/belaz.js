@@ -1,10 +1,14 @@
+/*
+Separate descriptor for kar'ernie
+ */
+
 module.exports = {
     pages: [
         {
             type: 'link',
             defaultValue: 'http://www.belaz.by/catalog/products/dumpcrosscountry/',
             contains: ["descriptor:belaz_list"],
-            disabled: false
+            disabled: true
         }
     ]
     , descriptors: {
