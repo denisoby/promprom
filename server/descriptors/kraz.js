@@ -7,7 +7,7 @@ module.exports = {
             type: 'link',
             defaultValue: 'http://www.autokraz.com.ua/index.php/ru/fabrication/automobile/civil/samosvaly',
             contains: ["descriptor:kraz_list"],
-            disabled: false
+            disabled: true
         }
     ]
     , descriptors: {
