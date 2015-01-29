@@ -10,6 +10,12 @@ module.exports = {
             contains: ["descriptor:belaz_list"],
             disabled: true
         }
+        , {
+            type: 'link',
+            defaultValue: 'http://belaz.by/catalog/products/dumptrucks/',
+            contains: ["descriptor:belaz_list"],
+            disabled: true
+        }
     ]
     , descriptors: {
         belaz_list: {
