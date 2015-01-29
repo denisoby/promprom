@@ -15,14 +15,14 @@ module.exports = {
             selector: "#itemListLeading"
             //todo remove debug
             , contains: ["descriptor:kraz_list_entry"]
-            , passValuesToParent: false
+            , passValuesToParent: true
             , namedList: true
             , valueNameSelector: "h1"
         }
         , kraz_list_entry: {
             selector: ".itemContainer"
             , namedList: false
-            , passValuesToParent: false
+            , passValuesToParent: true
             , contains: {
                 selector: ".catItemTitle a"
                 , name: 'link_to_full_kraz'
@@ -50,7 +50,8 @@ module.exports = {
                 }
                 , {
                     name: "Приложения"
-                    , selector: ".itemAttachmentsBlock ul"
+                    , selector: ".itemAttachmentsBlock ul a"
+                    , valueAttr: "href"
                 }
             ]
         }
