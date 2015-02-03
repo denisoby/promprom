@@ -126,8 +126,11 @@ crawlerClass.prototype.getUrlByCache = function (url, callback) {
 crawlerClass.prototype.getUrlHash = function (url) {
     var hashClass = crypto.createHash('md5');
     hashClass.update(url);
+    var hash = hashClass.digest('hex');
 
-    return hashClass.digest('hex');
+    console.log("Hash: " + url + " = " + hash);
+
+    return hash;
 };
 
 
