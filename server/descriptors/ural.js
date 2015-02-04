@@ -4,7 +4,7 @@ module.exports = {
             type: 'link',
             defaultValue: 'http://www.uralaz.ru/models/samosvaly/',
             contains: ["descriptor:ural_list"],
-            disabled: true
+            disabled: false
         }
     ]
     , descriptors: {
@@ -32,7 +32,15 @@ module.exports = {
             , valueNameSelector: '.right-nav li:first-child a'
             , contains: [
                 {
-                    name: "Технические характеристики"
+                    valueNameSelector: "tr:first-child td:nth-child(2)"
+
+                    /*
+                    in future this may
+                     */
+                    , templateValues: function(){
+                        debugger;
+                        return;
+                    }
                     , selector: ".article table"
                     , namedList: true
                     , contains: {
