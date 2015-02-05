@@ -10,6 +10,7 @@
  */
 
 var util = require("util")
+    , _ = require('lodash')
     , url = require('url')
     , cheerio = require('cheerio')
     , events = require("events")
@@ -317,7 +318,7 @@ prototype.createChild = function (descriptorName) {
 
     selector = descriptor.selector;
     if ($ && selector) {
-        found = $(selector, context);
+        found = me.find(descriptor, context);
 
         var length = found.length;
 
@@ -336,6 +337,35 @@ prototype.createChild = function (descriptorName) {
     else{
         console.error("No selector and no default value for " + descriptor.name);
     }
+};
+
+prototype.find = function (descriptor, context) {
+    var me = this;
+    var $ = me.childrenPage.$
+        , result
+        , found
+        , templateValues
+        , selector = descriptor.selector
+        , selectorTemplate = _.template(selector)
+        , selectorFull;
+
+    templateValues = descriptor.templateValues;
+
+    if (typeof templateValues == "function"){
+        debugger;
+        templateValues = templateValues.apply(this);
+    }
+
+    templateValues = templateValues || [null];
+
+    _.each(templateValues, function (templateData) {
+        templateData = _.isObject(templateData) ? templateData : {template: templateData};
+        selectorFull = selectorTemplate(templateData);
+        found = $(selector, context);
+        result = result && result.add(found) || found;
+    });
+
+    return result;
 };
 
 prototype.isNamedList = function () {
@@ -395,11 +425,6 @@ prototype.addChildToTree = function (child, skippedParent) {
             me.childTree[childName].push(childValue);
         }
     }
-};
-
-prototype.findPrevious = function() {
-    var me = this;
-    me.on('ready', listener);
 };
 
 module.exports = pageNodeClass;

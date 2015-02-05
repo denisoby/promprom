@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 module.exports = {
     pages: [
         {
@@ -37,14 +39,19 @@ module.exports = {
                     /*
                     in future this may
                      */
-                    , templateValues: function(){
-                        debugger;
-                        return;
-                    }
                     , selector: ".article table"
                     , namedList: true
                     , contains: {
                         selector: "tr"
+                        , templateValues: function(){
+                            var context = this.page.context
+                                , $ = this.page.$;
+
+                            var tdCount = $("tr:first-child td", context).length
+                                , childrenTds = _.range(2, tdCount + 1);
+
+                            return childrenTds;
+                        }
                         , valueNameSelector: "td:first-child"
                         , valueSelector: "td:nth-child(2)"
                         , name: "ural_model_techspec_item"
