@@ -42,7 +42,7 @@ module.exports = {
                     , selector: ".article table"
                     , namedList: true
                     , contains: {
-                        selector: "tr"
+                        selector: "td:nth-child(<%= template %>)"
                         , templateValues: function(){
                             var context = this.page.context
                                 , $ = this.page.$;
@@ -52,8 +52,11 @@ module.exports = {
 
                             return childrenTds;
                         }
-                        , valueNameSelector: "td:first-child"
-                        , valueSelector: "td:nth-child(2)"
+                        , valueNameSelector: function () {
+                            var $ = this.page.$
+                                , parent = this.parent;
+                            return $("td:first-child", parent.page.context);
+                        }
                         , name: "ural_model_techspec_item"
                     }
                 }

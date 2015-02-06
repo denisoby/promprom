@@ -1,3 +1,9 @@
+/*
+ kamaz
+ Page http://www.kamaz.ru/production/serial/samosvaly/kamaz-65201-73(2)/
+ duplicate entry Весовые параметры и нагрузки -> нагрузка на первую и вторую оси, кг (old value = '15000' new value = '7480'
+ */
+
 module.exports = {
     pages: [
         {

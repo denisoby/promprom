@@ -3,12 +3,6 @@
  */
 'use strict';
 
-/*
- kamaz
- Page http://www.kamaz.ru/production/serial/samosvaly/kamaz-65201-73(2)/
- duplicate entry Весовые параметры и нагрузки -> нагрузка на первую и вторую оси, кг (old value = '15000' new value = '7480'
- */
-
 var util = require("util")
     , _ = require('lodash')
     , url = require('url')
@@ -134,17 +128,17 @@ prototype.processContent = function () {
         var value = me.getValue();
         return name + " = " + value;
     }
-    else{
+    else {
         //complex object with child nodes
         return me.processChildren().then(function () {
-            return  "finished object: " + me.getName();
+            return "finished object: " + me.getName();
         }).catch(function (error) {
             me;
             console.error("Error processing children");
             console.error(error);
         });
     }
-}
+};
 
 prototype.isSimpleValue = function () {
     var me = this;
@@ -157,7 +151,7 @@ prototype.getName = function () {
         , attr = me.descriptor.valueNameAttr || ""
         , name = null;
 
-    if (typeof selector == "function"){
+    if (_.isFunction(selector)){
         return selector.apply(this);
     }
     else if (selector || attr) {
@@ -224,7 +218,7 @@ prototype._getSimpleValue = function () {
 prototype._getChildTree = function () {
     var me = this;
     return me.childTree;
-}
+};
 
 prototype.processChildren = function () {
     var me = this;
@@ -245,7 +239,7 @@ prototype.getDescriptorByName = function (descriptorName) {
     var me = this
         , descriptor;
 
-    if (typeof descriptorName == 'string') {
+    if (_.isString(descriptorName)) {
         var prefix = 'descriptor:';
         if (descriptorName.indexOf(prefix) === 0) {
             descriptor = me.descriptors[descriptorName.replace(prefix,'')];
@@ -291,13 +285,19 @@ prototype.createChild = function (descriptorName) {
     var me = this
         , newChild
         , newChildPromise
-        , found
-        , selector
+
+       , selector
         , item
         , descriptor
-        , $ = me.childrenPage.$
         , url = me.childrenPage.url
         , context = me.childrenPage.context;
+
+    /**
+     * @type {Cheerio}
+     */
+    var found
+        , $ = me.childrenPage.$
+        ;
 
     descriptor = me.getDescriptorByName(descriptorName);
 
@@ -341,24 +341,29 @@ prototype.createChild = function (descriptorName) {
 
 prototype.find = function (descriptor, context) {
     var me = this;
+
+    /**
+     * @type {Cheerio}
+     */
     var $ = me.childrenPage.$
         , result
-        , found
-        , templateValues
+        , found;
+
+    var
+        templateValues
         , selector = descriptor.selector
         , selectorTemplate = _.template(selector)
         , selectorFull;
 
     templateValues = descriptor.templateValues;
 
-    if (typeof templateValues == "function"){
-        debugger;
+    if (_.isFunction(templateValues)){
         templateValues = templateValues.apply(this);
     }
 
     templateValues = templateValues || [null];
 
-    _.each(templateValues, function (templateData) {
+    templateValues.forEach(function (templateData) {
         templateData = _.isObject(templateData) ? templateData : {template: templateData};
         selectorFull = selectorTemplate(templateData);
         found = $(selector, context);
@@ -396,7 +401,7 @@ prototype.addChildToTree = function (child, skippedParent) {
             , childValue = child.getValue();
 
         if (!child.isSimpleValue() && !child.childTree){
-            //child tree will be null for skipped links that wwere already processed
+            //child tree will be null for skipped links that were already processed
             return;
         }
 
@@ -404,7 +409,7 @@ prototype.addChildToTree = function (child, skippedParent) {
         if (child.isNamedList() || child.isSimpleValue()) {
             var oldValue = me.childTree[childName];
 
-            if (typeof  oldValue == "undefined") {
+            if (_.isUndefined(oldValue)) {
                 me.childTree[childName] = childValue;
             }
             else {
