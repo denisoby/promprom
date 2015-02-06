@@ -53,9 +53,8 @@ module.exports = {
                             return childrenTds;
                         }
                         , valueNameSelector: function () {
-                            var $ = this.page.$
-                                , parent = this.parent;
-                            return $("td:first-child", parent.page.context);
+                            var $ = this.page.$;
+                            return $("td:first-child", this.page.context.parent).text();
                         }
                         , name: "ural_model_techspec_item"
                     }

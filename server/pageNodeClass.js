@@ -351,9 +351,9 @@ prototype.find = function (descriptor, context) {
 
     var
         templateValues
-        , selector = descriptor.selector
-        , selectorTemplate = _.template(selector)
-        , selectorFull;
+        , selectorRaw = descriptor.selector
+        , selectorTemplate = _.template(selectorRaw)
+        , selector;
 
     templateValues = descriptor.templateValues;
 
@@ -365,7 +365,7 @@ prototype.find = function (descriptor, context) {
 
     templateValues.forEach(function (templateData) {
         templateData = _.isObject(templateData) ? templateData : {template: templateData};
-        selectorFull = selectorTemplate(templateData);
+        selector = selectorTemplate(templateData);
         found = $(selector, context);
         result = result && result.add(found) || found;
     });
