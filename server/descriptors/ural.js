@@ -86,7 +86,14 @@ module.exports = {
                     }
                     , listeners: {
                         processed: function(){
-                            debugger;
+                            /*
+                            fix for colspan'ed cell's
+                            todo add nth-col pseudo to cssselect
+                             */
+                            var me = this;
+                                for (var childNum = 1; childNum < me.children.length; childNum++) {
+                                    _.defaults(me.children[childNum].childTree, me.children[0].childTree);
+                                }
                         }
                     }
                 }
