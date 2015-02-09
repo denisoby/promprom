@@ -31,18 +31,11 @@ function pageNodeClass(parent, page, descriptorName, options) {
     me.descriptor = me.getDescriptorByName(descriptorName);
     me.descriptorName = me.descriptor.name;
 
-    me.itemNum = options.itemNum;
+    options = options || {};
+    me._itemNum = options._itemNum;
+    me._selector = options._selector;
 
-    me.childrenPage = _.clone(me.page);
-
-    var childrenPageContextFn = me.descriptor.childrenPageContext;
-    if (childrenPageContextFn && _.isFunction(childrenPageContextFn)) {
-        var childContext = childrenPageContextFn.apply(this);
-        if (childContext){
-            me.childrenPage.context = childContext;
-        }
-    }
-
+    me.childrenPage = null;
 
     me.type = me.descriptor.type || 'defaultType';
 
@@ -128,7 +121,18 @@ prototype.getPage = function (resolve, reject) {
         }
     }
     else {
-        resolve(me.page);
+
+        var childrenPage = _.clone(me.page);
+
+        var childrenPageContextFn = me.descriptor.childrenPageContext;
+        if (childrenPageContextFn && _.isFunction(childrenPageContextFn)) {
+            var childContext = childrenPageContextFn.apply(this);
+            if (childContext){
+                childrenPage.context = childContext;
+            }
+        }
+
+        resolve(childrenPage);
     }
 };
 
@@ -163,11 +167,6 @@ prototype.getName = function () {
     var selector = me.descriptor.valueNameSelector
         , attr = me.descriptor.valueNameAttr || ""
         , name = null;
-
-    if (this.descriptor.selector == 'tr:first-child td:nth-child(n+2)'){
-        debugger;
-    }
-
 
     if (_.isFunction(selector)){
         return selector.apply(this);
@@ -310,6 +309,10 @@ prototype.createChild = function (descriptorName) {
         , url = me.childrenPage.url
         , context = me.childrenPage.context;
 
+    if (me.descriptor.selector == 'tr:first-child td:nth-child(n+2)'){
+        debugger;
+    }
+
     /**
      * @type {Cheerio}
      */
@@ -323,9 +326,8 @@ prototype.createChild = function (descriptorName) {
         return;
     }
 
-    function createChildInstance(foundItem, foundNum){
+    function createChildInstance(foundItem, options){
         var page = {$: $, context: foundItem, url: url};
-        var options = {itemNum: foundNum};
         newChild = new pageNodeClass(me, page, descriptorName, options);
         me.children.push(newChild);
 
@@ -337,6 +339,11 @@ prototype.createChild = function (descriptorName) {
     }
 
     selector = descriptor.selector;
+
+    var options = {
+        _selector: selector
+    };
+
     if ($ && selector) {
         found = me.find(descriptor, context);
 
@@ -344,15 +351,16 @@ prototype.createChild = function (descriptorName) {
 
         if (length) {
             for (var i = 0; i < length; i++) {
+                options._itemNum = i;
                 item = found[i];
-                createChildInstance(item, i);
+                createChildInstance(item, options);
             }
         }
         else {
             console.log("0 found for: " + descriptor.name + " : " + selector);
         }
     } else if (descriptor.defaultValue){
-        createChildInstance(null);
+        createChildInstance(null, options);
     }
     else{
         console.error("No selector and no default value for " + descriptor.name);
@@ -370,25 +378,32 @@ prototype.find = function (descriptor, context) {
         , found;
 
     var
-        templateValues
-        , selectorRaw = descriptor.selector
-        , selectorTemplate = _.template(selectorRaw)
-        , selector;
+        selector = descriptor.selector;
 
-    templateValues = descriptor.templateValues;
-
-    if (_.isFunction(templateValues)){
-        templateValues = templateValues.apply(this);
+    if (_.isFunction(selector)){
+        debugger;
+        selector = selector.apply(this);
     }
 
-    templateValues = templateValues || [null];
+    /*
+            , selectorRaw = descriptor.selector
+            , selectorTemplate = _.template(selectorRaw)
+            , templateValues = descriptor.templateValues
+        if (_.isFunction(templateValues)){
+            templateValues = templateValues.apply(this);
+        }
 
-    templateValues.forEach(function (templateData) {
-        templateData = _.isObject(templateData) ? templateData : {template: templateData};
-        selector = selectorTemplate(templateData);
-        found = $(selector, context);
-        result = result && result.add(found) || found;
-    });
+        templateValues = templateValues || [null];
+
+        templateValues.forEach(function (templateData) {
+            templateData = _.isObject(templateData) ? templateData : {template: templateData};
+            selector = selectorTemplate(templateData);
+            found = $(selector, context);
+            result = result && result.add(found) || found;
+        });
+    */
+
+    result = $(selector, context);
 
     return result;
 };

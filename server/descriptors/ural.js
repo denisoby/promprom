@@ -44,12 +44,14 @@ module.exports = {
                     , contains: {
                         selector : "tr:first-child td:nth-child(n+2)"
                         , childrenPageContext: function(){
-                            //context = whole table
+                            //set context = whole table
                             return this.parent.page.context;
                         }
-                        , _contains : {
+                        , namedList: false
+                        , contains : {
                             selector: function(){
-                                return "td:nth-child(<%= template %>)"
+                                //this = parent
+                                return "td:nth-child(" + (this._itemNum + 2) + ")"
                             }
 /*
                             , templateValues: function(){
