@@ -47,7 +47,20 @@ module.exports = {
                             //set context = whole table
                             return this.parent.page.context;
                         }
-                        , namedList: false
+                        , valueNameSelector: function(){
+                            var $ = this.page.$
+                                , firstRowName = $("td:first-child", this.page.context.parent).text()
+                                , name;
+                            if (firstRowName == 'Шасси'){
+                                name = $(this.page.context).text();
+                            }
+                            else{
+                                name = this.parent.parent.getName();
+                            }
+
+                            return name;
+                        }
+                        , namedList: true
                         , contains : {
                             selector: function(){
                                 //this = parent

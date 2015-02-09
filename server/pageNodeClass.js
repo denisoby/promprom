@@ -309,10 +309,6 @@ prototype.createChild = function (descriptorName) {
         , url = me.childrenPage.url
         , context = me.childrenPage.context;
 
-    if (me.descriptor.selector == 'tr:first-child td:nth-child(n+2)'){
-        debugger;
-    }
-
     /**
      * @type {Cheerio}
      */
@@ -381,7 +377,6 @@ prototype.find = function (descriptor, context) {
         selector = descriptor.selector;
 
     if (_.isFunction(selector)){
-        debugger;
         selector = selector.apply(this);
     }
 
