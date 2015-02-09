@@ -13,7 +13,7 @@ var util = require("util")
     , crawlerClass = require('./crawlerClass')
     ;
 
-function pageNodeClass(parent, page, descriptorName, descriptors) {
+function pageNodeClass(parent, page, descriptorName, options) {
     var me = this;
     events.EventEmitter.call(this);
 
@@ -27,11 +27,22 @@ function pageNodeClass(parent, page, descriptorName, descriptors) {
         , $: null
         , url: null};
 
-    me.childrenPage = me.page;
-
-    me.descriptors = parent && parent.descriptors || descriptors;
+    me.descriptors = parent && parent.descriptors || options.descriptors;
     me.descriptor = me.getDescriptorByName(descriptorName);
     me.descriptorName = me.descriptor.name;
+
+    me.itemNum = options.itemNum;
+
+    me.childrenPage = _.clone(me.page);
+
+    var childrenPageContextFn = me.descriptor.childrenPageContext;
+    if (childrenPageContextFn && _.isFunction(childrenPageContextFn)) {
+        var childContext = childrenPageContextFn.apply(this);
+        if (childContext){
+            me.childrenPage.context = childContext;
+        }
+    }
+
 
     me.type = me.descriptor.type || 'defaultType';
 
@@ -63,12 +74,14 @@ prototype.runPromise = function () {
                 me.childTree = null;
             }
         }).
+/*
         then(function (message) {
             //console.log(message);
             //todo check for memory leaks
-//            me.$ = null;
-//            me.context = null;
+            me.$ = null;
+            me.context = null;
         }).
+*/
         then(function () {
             return me;
         });
@@ -151,7 +164,7 @@ prototype.getName = function () {
         , attr = me.descriptor.valueNameAttr || ""
         , name = null;
 
-    if (this.descriptor.selector == 'tr:first-child td'){
+    if (this.descriptor.selector == 'tr:first-child td:nth-child(n+2)'){
         debugger;
     }
 
@@ -310,8 +323,10 @@ prototype.createChild = function (descriptorName) {
         return;
     }
 
-    function createChildInstance(foundItem){
-        newChild = new pageNodeClass(me, {$: $, context: foundItem, url: url}, descriptorName);
+    function createChildInstance(foundItem, foundNum){
+        var page = {$: $, context: foundItem, url: url};
+        var options = {itemNum: foundNum};
+        newChild = new pageNodeClass(me, page, descriptorName, options);
         me.children.push(newChild);
 
         newChildPromise = newChild.runPromise().then(function (childComplete) {
@@ -330,7 +345,7 @@ prototype.createChild = function (descriptorName) {
         if (length) {
             for (var i = 0; i < length; i++) {
                 item = found[i];
-                createChildInstance(item);
+                createChildInstance(item, i);
             }
         }
         else {
@@ -420,8 +435,8 @@ prototype.addChildToTree = function (child, skippedParent) {
             else {
                 var message = "Page " + child.page.url.href + "\n" +
                 "duplicate entry " + me.getName() + " -> " + child.getName() +
-                (skippedParent ? " from skipped " + skippedParent.getName() : "") +
-                " (old value = '" + oldValue + "' new value = '" + childValue + "'";
+                (skippedParent ? " from skipped " + skippedParent.getName() : "")
+//                + " (old value = '" + oldValue + "' new value = '" + childValue + "'";
                 if (!child.descriptor.valueNameSelector) {
                     message += " Maybe not set valueNameSelector?";
                     child.getValue();

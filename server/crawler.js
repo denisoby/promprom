@@ -14,7 +14,8 @@ var descriptors = require('./descriptors/descriptors.js')
 */
 
 
-var rootNode = new pageNodeClass(null, null, descriptors.pages, descriptors.descriptors);
+var options = { descriptors: descriptors.descriptors};
+var rootNode = new pageNodeClass(null, null, descriptors.pages, options);
 rootNode.runPromise().
     then(function () {
         console.log("Done!");

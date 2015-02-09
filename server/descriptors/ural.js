@@ -34,7 +34,7 @@ module.exports = {
             , valueNameSelector: '.right-nav li:first-child a'
             , contains: [
                 {
-                    valueNameSelector: "tr:first-child td:nth-child(2)"
+                    name: "Характеристики"
 
                     /*
                     in future this may
@@ -42,9 +42,16 @@ module.exports = {
                     , selector: ".article table"
                     , namedList: true
                     , contains: {
-                        selector : "tr:first-child td"
+                        selector : "tr:first-child td:nth-child(n+2)"
+                        , childrenPageContext: function(){
+                            //context = whole table
+                            return this.parent.page.context;
+                        }
                         , _contains : {
-                            selector: "td:nth-child(<%= template %>)"
+                            selector: function(){
+                                return "td:nth-child(<%= template %>)"
+                            }
+/*
                             , templateValues: function(){
                                 var context = this.page.context
                                     , $ = this.page.$;
@@ -54,6 +61,7 @@ module.exports = {
 
                                 return childrenTds;
                             }
+*/
                             , valueNameSelector: function () {
                                 var $ = this.page.$;
                                 return $("td:first-child", this.page.context.parent).text();
