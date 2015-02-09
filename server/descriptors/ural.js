@@ -66,6 +66,11 @@ module.exports = {
                                 //this = parent
                                 return "td:nth-child(" + (this._itemNum + 2) + ")"
                             }
+                        , valueNameSelector: function () {
+                            var $ = this.page.$;
+                            return $("td:first-child", this.page.context.parent).text();
+                        }
+                        , name: "ural_model_techspec_item"
 /*
                             , templateValues: function(){
                                 var context = this.page.context
@@ -77,14 +82,13 @@ module.exports = {
                                 return childrenTds;
                             }
 */
-                            , valueNameSelector: function () {
-                                var $ = this.page.$;
-                                return $("td:first-child", this.page.context.parent).text();
-                            }
-                            , name: "ural_model_techspec_item"
                         }
-
-                }
+                    }
+                    , listeners: {
+                        processed: function(){
+                            debugger;
+                        }
+                    }
                 }
             ]
         }

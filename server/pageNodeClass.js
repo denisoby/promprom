@@ -42,6 +42,8 @@ function pageNodeClass(parent, page, descriptorName, options) {
     me.children = [];
     me.childrenPromises = [];
     me.childTree = {};
+
+    me.addListenersBatch(me.descriptor.listeners);
 }
 
 util.inherits(pageNodeClass, events.EventEmitter);
@@ -148,6 +150,7 @@ prototype.processContent = function () {
     else {
         //complex object with child nodes
         return me.processChildren().then(function () {
+            me.emit("processed");
             return "finished object: " + me.getName();
         }).catch(function (error) {
             me;
@@ -460,6 +463,17 @@ prototype.addChildToTree = function (child, skippedParent) {
             me.childTree[childName].push(childValue);
         }
     }
+};
+
+prototype.addListenersBatch = function (listeners) {
+    var me = this;
+    /*
+    todo make disposable
+     */
+
+    _.forEach(listeners, function (listener, name) {
+        me.addListener(name, listener);
+    });
 };
 
 module.exports = pageNodeClass;
