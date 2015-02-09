@@ -151,10 +151,15 @@ prototype.getName = function () {
         , attr = me.descriptor.valueNameAttr || ""
         , name = null;
 
+    if (this.descriptor.selector == 'tr:first-child td'){
+        debugger;
+    }
+
+
     if (_.isFunction(selector)){
         return selector.apply(this);
     }
-    else if (selector || attr) {
+    else if (selector || attr || this.isSimpleValue()) {
         name = me.getElementAttribute(selector, attr);
     }
 

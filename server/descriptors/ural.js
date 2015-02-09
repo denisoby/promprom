@@ -42,22 +42,26 @@ module.exports = {
                     , selector: ".article table"
                     , namedList: true
                     , contains: {
-                        selector: "td:nth-child(<%= template %>)"
-                        , templateValues: function(){
-                            var context = this.page.context
-                                , $ = this.page.$;
+                        selector : "tr:first-child td"
+                        , _contains : {
+                            selector: "td:nth-child(<%= template %>)"
+                            , templateValues: function(){
+                                var context = this.page.context
+                                    , $ = this.page.$;
 
-                            var tdCount = $("tr:first-child td", context).length
-                                , childrenTds = _.range(2, tdCount + 1);
+                                var tdCount = $("tr:first-child td", context).length
+                                    , childrenTds = _.range(2, tdCount + 1);
 
-                            return childrenTds;
+                                return childrenTds;
+                            }
+                            , valueNameSelector: function () {
+                                var $ = this.page.$;
+                                return $("td:first-child", this.page.context.parent).text();
+                            }
+                            , name: "ural_model_techspec_item"
                         }
-                        , valueNameSelector: function () {
-                            var $ = this.page.$;
-                            return $("td:first-child", this.page.context.parent).text();
-                        }
-                        , name: "ural_model_techspec_item"
-                    }
+
+                }
                 }
             ]
         }
