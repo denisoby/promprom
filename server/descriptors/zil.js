@@ -38,7 +38,7 @@ module.exports = {
                     , selector: "p:first-child"
                 },
                 {
-                    name: "Характеристики"
+                    name: "Info"
                     , selector: "div.b-carinfo table"
                     , namedList: false
                     , contains: {
@@ -47,21 +47,16 @@ module.exports = {
                             //set context = whole table
                             return this.parent.page.context;
                         }
-                        /*
                          , valueNameSelector: function () {
-                         var $ = this.page.$
-                         , firstRowName = $("td:first-child", this.page.context.parent).text()
-                         , name;
-                         if (firstRowName == 'Шасси') {
-                         name = $(this.page.context).text();
-                         }
-                         else {
-                         name = this.parent.parent.getName();
-                         }
+                            var $ = this.page.$;
 
-                         return name;
+                            /*
+                            todo - search prev tag
+                             */
+
+                            //h2
+                             return $(this.parent.page.context.parent.prev.prev).text();
                          }
-                         */
                         , namedList: false
                         , contains: {
                             selector: function () {
