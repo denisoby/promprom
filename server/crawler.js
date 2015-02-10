@@ -8,9 +8,7 @@ var descriptors = require('./descriptors/descriptors.js')
     , pageNodeClass = require('./pageNodeClass');
 
 /*
-хово
 зил
-краз http://www.autokraz.com.ua/index.php/uk/produktsiya/automobile/civil/samoskidi
 */
 
 
