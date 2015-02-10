@@ -11,17 +11,17 @@ module.exports = {
     ]
     , descriptors: {
         zil_list: {
-            selector: ".content"
+            selector: ".l-content"
             , contains: ["descriptor:zil_list_entry"]
             , passValuesToParent: true
         }
         , zil_list_entry: {
-            selector: ".catalog-category-section"
+            selector: ".b-catalog-item"
             , namedList: false
             , passValuesToParent: true
             , contains: {
-                selector: ".title a"
-                , name: 'link_to_full_ural'
+                selector: "a.link"
+                , name: 'link_to_full_zil'
                 , namedList: false
                 , type: 'link'
                 , valueAttr: 'href'
@@ -30,60 +30,51 @@ module.exports = {
             }
         }
         , zil_model: {
-            selector: "#main"
-            , valueNameSelector: '.right-nav li:first-child a'
+            selector: ".l-content"
+            , valueNameSelector: '.b-pagetitle h1'
             , contains: [
                 {
+                    name: "description"
+                    , selector: "p:first-child"
+                },
+                {
                     name: "Характеристики"
-
-                    /*
-                     in future this may
-                     */
-                    , selector: ".article table"
-                    , namedList: true
+                    , selector: "div.b-carinfo table"
+                    , namedList: false
                     , contains: {
-                    selector: "tr:first-child td:nth-child(n+2)"
-                    , childrenPageContext: function () {
-                        //set context = whole table
-                        return this.parent.page.context;
-                    }
-                    , valueNameSelector: function () {
-                        var $ = this.page.$
-                            , firstRowName = $("td:first-child", this.page.context.parent).text()
-                            , name;
-                        if (firstRowName == 'Шасси') {
-                            name = $(this.page.context).text();
+                        selector: "tr:first-child td:nth-child(n+2)"
+                        , childrenPageContext: function () {
+                            //set context = whole table
+                            return this.parent.page.context;
                         }
-                        else {
-                            name = this.parent.parent.getName();
-                        }
-
-                        return name;
-                    }
-                    , namedList: true
-                    , contains: {
-                        selector: function () {
-                            //this = parent
-                            return "td:nth-child(" + (this._itemNum + 2) + ")"
-                        }
-                        , valueNameSelector: function () {
-                            var $ = this.page.$;
-                            return $("td:first-child", this.page.context.parent).text();
-                        }
-                        , name: "zil_model_techspec_item"
                         /*
-                         , templateValues: function(){
-                         var context = this.page.context
-                         , $ = this.page.$;
+                         , valueNameSelector: function () {
+                         var $ = this.page.$
+                         , firstRowName = $("td:first-child", this.page.context.parent).text()
+                         , name;
+                         if (firstRowName == 'Шасси') {
+                         name = $(this.page.context).text();
+                         }
+                         else {
+                         name = this.parent.parent.getName();
+                         }
 
-                         var tdCount = $("tr:first-child td", context).length
-                         , childrenTds = _.range(2, tdCount + 1);
-
-                         return childrenTds;
+                         return name;
                          }
                          */
+                        , namedList: false
+                        , contains: {
+                            selector: function () {
+                                //this = parent
+                                return "td:nth-child(" + (this._itemNum + 2) + ")"
+                            }
+                            , valueNameSelector: function () {
+                                var $ = this.page.$;
+                                return $("td:first-child", this.page.context.parent).text();
+                            }
+                            , name: "zil_model_techspec_item"
+                        }
                     }
-                }
                     , listeners: {
                     processed: function () {
                         /*
