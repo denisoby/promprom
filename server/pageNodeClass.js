@@ -444,7 +444,7 @@ prototype.addChildToTree = function (child, skippedParent) {
         }
 
 
-        if (child.isNamedList() || child.isSimpleValue()) {
+        if (child.isNamedList()) {
             var oldValue = me.childTree[childName];
 
             if (_.isUndefined(oldValue)) {

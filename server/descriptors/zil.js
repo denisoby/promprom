@@ -34,12 +34,23 @@ module.exports = {
             , valueNameSelector: '.b-pagetitle h1'
             , contains: [
                 {
+                    name: "linked_images"
+                    , selector: '.b-pmodel a.fancybox'
+                    , valueAttr: 'href'
+                    , namedList: false
+
+                    //todo fix costyl
+                    , valueNameSelector: function(){
+                        return this.descriptor.name
+                    }
+                }
+                ,{
                     name: "description"
-                    , selector: "p:first-child"
+                    , selector: ".b-catalogdetail p:first-child"
                 },
                 {
                     name: "Info"
-                    , selector: "div.b-carinfo table"
+                    , selector: ".b-catalogdetail div.b-carinfo table"
                     , namedList: false
                     , contains: {
                         selector: "tr:first-child td:nth-child(n+2)"
@@ -70,20 +81,6 @@ module.exports = {
                             , name: "zil_model_techspec_item"
                         }
                     }
-                    , listeners: {
-                    processed: function () {
-                        /*
-                         fix for colspan'ed cell's
-                         todo add nth-col pseudo to cssselect
-                         */
-                        /*
-                         var me = this;
-                         for (var childNum = 1; childNum < me.children.length; childNum++) {
-                         _.defaults(me.children[childNum].childTree, me.children[0].childTree);
-                         }
-                         */
-                    }
-                }
                 }
             ]
         }
