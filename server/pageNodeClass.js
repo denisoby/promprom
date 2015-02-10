@@ -13,6 +13,8 @@ var util = require("util")
     , crawlerClass = require('./crawlerClass')
     ;
 
+var trimmingChars = "\r\t\n ";
+
 function pageNodeClass(parent, page, descriptorName, options) {
     var me = this;
     events.EventEmitter.call(this);
@@ -172,13 +174,14 @@ prototype.getName = function () {
         , name = null;
 
     if (_.isFunction(selector)){
-        return selector.apply(this);
+        name = selector.apply(this);
     }
     else if (selector || attr || this.isSimpleValue()) {
         name = me.getElementAttribute(selector, attr);
     }
 
     name = name || this.descriptorName;
+    name = name && _.trim(name, trimmingChars);
 
     return name;
 };
@@ -231,6 +234,8 @@ prototype._getSimpleValue = function () {
 
     var selector = me.descriptor.valueSelector || "";
     var val = me.getElementAttribute(selector, me.descriptor.valueAttr) || me.descriptor.defaultValue;
+
+    val = val && _.trim(val, trimmingChars);
 
     return val;
 };
