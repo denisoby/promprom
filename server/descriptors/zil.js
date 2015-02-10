@@ -39,7 +39,10 @@ module.exports = {
                     , valueAttr: 'href'
                     , namedList: false
 
-                    //todo fix costyl
+                    /*
+                    todo fix costyl
+                    if (!namedList) - use descriptor.name for list
+                     */
                     , valueNameSelector: function(){
                         return this.descriptor.name
                     }
