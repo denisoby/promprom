@@ -92,35 +92,39 @@ prototype.getPage = function (resolve, reject) {
     me.$ = parent && parent.$;
 
     if (me.type == 'link') {
-        var crawler = new crawlerClass();
+        if (!me.isDisabled()) {
+            var crawler = new crawlerClass();
 
-        var newUrl = me._getSimpleValue();
+            var newUrl = me._getSimpleValue();
 
-        var pageUrl = parent.page.url
-            , parentHref = pageUrl && pageUrl.href;
+            var pageUrl = parent.page.url
+                , parentHref = pageUrl && pageUrl.href;
 
 
-        if (parentHref) {
-            newUrl = url.resolve(parentHref, newUrl);
-        }
+            if (parentHref) {
+                newUrl = url.resolve(parentHref, newUrl);
+            }
 
-        if (me.linksIndex.indexOf(newUrl) < 0) {
-            me.linksIndex.push(newUrl);
+            if (me.linksIndex.indexOf(newUrl) < 0) {
+                me.linksIndex.push(newUrl);
 
-            crawler.getUrl(newUrl, {
-                charset: me.descriptor.charset
-            }, function (pageHTML) {
+                crawler.getUrl(newUrl, {
+                    charset: me.descriptor.charset
+                }, function (pageHTML) {
 
-                var page = {
-                    $        : cheerio.load(pageHTML)
-                    , context: null
-                    , url    : url.parse(newUrl)
-                };
+                    var page = {
+                        $: cheerio.load(pageHTML)
+                        , context: null
+                        , url: url.parse(newUrl)
+                    };
 
-                resolve(page);
-            });
+                    resolve(page);
+                });
+            } else {
+                //page is already processed
+                resolve(null);
+            }
         } else {
-            //page is already processed
             resolve(null);
         }
     }
@@ -165,6 +169,11 @@ prototype.processContent = function () {
 prototype.isSimpleValue = function () {
     var me = this;
     return !me.descriptor.contains;
+};
+
+prototype.isDisabled = function () {
+    var me = this;
+    return me.descriptor.disabled == true;
 };
 
 prototype.getName = function () {

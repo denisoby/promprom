@@ -38,6 +38,7 @@ module.exports = {
                     , selector: '.b-pmodel a.fancybox'
                     , valueAttr: 'href'
                     , namedList: false
+                    , type: 'link'
 
                     /*
                     todo fix costyl
