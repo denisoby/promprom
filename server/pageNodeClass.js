@@ -179,14 +179,13 @@ prototype.isDisabled = function () {
 prototype.getName = function () {
     var me = this;
 
-    var name = me.descriptor.valueName;
-
-    if (!_.isUndefined(name)){
-        return name;
+    if (me.descriptor.defaultNameForEmpty){
+        return me.descriptor.name;
     }
 
     var selector = me.descriptor.valueNameSelector
-        , attr = me.descriptor.valueNameAttr || "";
+        , attr = me.descriptor.valueNameAttr || ""
+        , name;
 
     if (_.isFunction(selector)){
         name = selector.apply(this);

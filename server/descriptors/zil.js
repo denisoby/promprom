@@ -39,7 +39,7 @@ module.exports = {
                     , valueAttr: 'href'
                     , namedList: false
                     , type: 'link'
-                    , valueName: "images"
+                    , defaultNameForEmpty: true
                 }
                 ,{
                     name: "description"
