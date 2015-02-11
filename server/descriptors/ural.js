@@ -6,7 +6,7 @@ module.exports = {
             type: 'link',
             defaultValue: 'http://www.uralaz.ru/models/samosvaly/',
             contains: ["descriptor:ural_list"],
-            disabled: true
+            disabled: false
         }
     ]
     , descriptors: {
@@ -17,20 +17,32 @@ module.exports = {
         }
         , ural_list_entry: {
             selector: ".catalog-category-section"
-            , namedList: false
-            , passValuesToParent: true
-            , contains: {
-                selector: ".title a"
-                , name: 'link_to_full_ural'
-                , namedList: false
-                , type: 'link'
-                , valueAttr: 'href'
-                , passValuesToParent: true
-                , contains: 'descriptor:ural_model'
-            }
+            , namedList: true
+            , passValuesToParent: false
+            , valueNameSelector: '.section-title'
+            , contains: [
+                {
+                    selector: 'img'
+                    , name: 'images'
+                    , valueAttr: 'src'
+                    , namedList: false
+                    , type: 'link'
+                    , defaultNameForEmpty: true
+                }
+                , {
+                    selector: ".title a"
+                    , name: 'link_to_full_ural'
+                    , namedList: false
+                    , type: 'link'
+                    , valueAttr: 'href'
+                    , passValuesToParent: true
+                    , contains: 'descriptor:ural_model'
+                }
+            ]
         }
         , ural_model: {
             selector: "#main"
+            , passValuesToParent: true
             , valueNameSelector: '.right-nav li:first-child a'
             , contains: [
                 {

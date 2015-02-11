@@ -6,7 +6,7 @@ module.exports = {
             type: 'link',
             defaultValue: 'http://www.amo-zil.ru/catalog/?id=134',
             contains: ["descriptor:zil_list"],
-            disabled: false
+            disabled: true
         }
     ]
     , descriptors: {
