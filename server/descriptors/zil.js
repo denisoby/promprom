@@ -44,9 +44,7 @@ module.exports = {
                     todo fix costyl
                     if (!namedList) - use descriptor.name for list
                      */
-                    , valueNameSelector: function(){
-                        return this.descriptor.name
-                    }
+                    , valueName: "images"
                 }
                 ,{
                     name: "description"
