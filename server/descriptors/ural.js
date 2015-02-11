@@ -27,7 +27,7 @@ module.exports = {
                     , valueAttr: 'src'
                     , namedList: false
                     , type: 'link'
-                    , defaultNameForEmpty: true
+                    , defaultName: true
                 }
                 , {
                     selector: ".title a"
@@ -120,6 +120,18 @@ module.exports = {
                         , valueNameSelector: 'td:first-child'
                         , contains: {
                             selector: 'td:nth-child(2)'
+                            , name: 'Особенности комплектации'
+                            , defaultName: true
+                            , listeners: {
+                                getValue: function(value){
+                                    if (value) {
+                                        var searchString = 'Особенности комплектации: ';
+                                        value = value.substr(value.indexOf(searchString) + searchString.length);
+                                    }
+
+                                    return value;
+                                }
+                            }
                         }
                     }
                 }

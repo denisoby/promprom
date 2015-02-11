@@ -179,7 +179,7 @@ prototype.isDisabled = function () {
 prototype.getName = function () {
     var me = this;
 
-    if (me.descriptor.defaultNameForEmpty){
+    if (me.descriptor.defaultName){
         return me.descriptor.name;
     }
 
@@ -240,6 +240,17 @@ prototype.getValue = function () {
     } else {
         val = me._getChildTree();
     }
+
+    var getValueEvent = 'getValue';
+
+    me.listeners(getValueEvent).forEach(function (listener) {
+        if (_.isFunction(listener)) {
+            val = listener.call(me, val);
+        } else {
+            console.error('Bad listener for getValue event for ' + me.getName());
+        }
+    });
+
     return val;
 };
 
