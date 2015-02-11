@@ -39,11 +39,6 @@ module.exports = {
                     , valueAttr: 'href'
                     , namedList: false
                     , type: 'link'
-
-                    /*
-                    todo fix costyl
-                    if (!namedList) - use descriptor.name for list
-                     */
                     , valueName: "images"
                 }
                 ,{
