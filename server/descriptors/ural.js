@@ -111,6 +111,18 @@ module.exports = {
                         }
                     }
                 }
+                , {
+                    name: "Модифицикации"
+                    , selector: 'table.modifications-table'
+                    , contains: {
+                        name: 'modification-row'
+                        , selector: 'tr:nth-child(n+2)'
+                        , valueNameSelector: 'td:first-child'
+                        , contains: {
+                            selector: 'td:nth-child(2)'
+                        }
+                    }
+                }
             ]
         }
     }
