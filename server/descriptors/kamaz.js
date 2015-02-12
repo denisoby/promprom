@@ -55,7 +55,13 @@ module.exports = {
                             , name: "kamaz_model_techspec_item"
                             , listeners : {
                                 getName: function (name) {
-                                    return 'xxx: ' + name;
+                                    var me = this;
+
+                                    if (name && me.parent.childTree[name]){
+                                        name = name + '__' + me._itemNum;
+                                    }
+
+                                    return name;
                                 }
                             }
                         }

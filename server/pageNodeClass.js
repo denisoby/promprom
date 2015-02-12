@@ -254,11 +254,14 @@ prototype.getValue = function () {
 
 prototype.applyHooks = function (eventName, value) {
     var me = this;
+    var tmp;
 
     me.listeners(eventName).forEach(function (listener) {
-        debugger;
         if (_.isFunction(listener)) {
-            value = listener.call(me, value);
+            tmp = listener.call(me, value);
+            if (!_.isUndefined(tmp)){
+                value = tmp;
+            }
         } else {
             console.error('Bad listener for ' + eventName + ': ' + listener);
         }
@@ -517,6 +520,23 @@ prototype.addListenersBatch = function (listeners) {
     _.forEach(listeners, function (listener, name) {
         me.addListener(name, listener);
     });
+};
+
+prototype.getPreviousNodeMatching = function (filter) {
+    /*
+    todo match elements only from same selector
+     */
+    var me = this;
+    var result = null
+        , node;
+    for(var i=me._itemNum - 1; i >= 0; i++) {
+        node = me.parent.children[i];
+        if (filter(node)){
+            return node;
+        }
+    }
+
+    return null;
 };
 
 module.exports = pageNodeClass;
