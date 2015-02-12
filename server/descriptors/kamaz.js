@@ -10,7 +10,7 @@ module.exports = {
             type: 'link',
             defaultValue: 'http://www.kamaz.ru/production/serial/samosvaly/',
             contains: ["descriptor:kamaz_list"],
-            disabled: true
+            disabled: false
         }
     ]
     , descriptors: {
@@ -53,6 +53,11 @@ module.exports = {
                             , valueNameSelector: "td:first-child"
                             , valueSelector: "td:nth-child(2)"
                             , name: "kamaz_model_techspec_item"
+                            , listeners : {
+                                getName: function (name) {
+                                    return 'xxx: ' + name;
+                                }
+                            }
                         }
                     }
                 }

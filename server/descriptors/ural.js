@@ -6,7 +6,7 @@ module.exports = {
             type: 'link',
             defaultValue: 'http://www.uralaz.ru/models/samosvaly/',
             contains: ["descriptor:ural_list"],
-            disabled: false
+            disabled: true
         }
     ]
     , descriptors: {

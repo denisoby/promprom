@@ -188,6 +188,10 @@ prototype.getName = function () {
         , name;
 
     if (_.isFunction(selector)){
+        /*
+        todo remove this option
+         */
+        //console.warn('valueNameSelector is depricated. Sorry. Use getName listener hook instead.');
         name = selector.apply(this);
     }
     else if (selector || attr || this.isSimpleValue()) {
@@ -196,6 +200,8 @@ prototype.getName = function () {
 
     name = name || this.descriptorName;
     name = name && _.trim(name, trimmingChars);
+
+    name = me.applyHooks('getName', name);
 
     return name;
 };
@@ -233,25 +239,32 @@ prototype.getElementAttribute = function (selector, attribute) {
 
 prototype.getValue = function () {
     var me = this;
-    var val;
+    var value;
 
     if (me.isSimpleValue()) {
-        val = me._getSimpleValue();
+        value = me._getSimpleValue();
     } else {
-        val = me._getChildTree();
+        value = me._getChildTree();
     }
 
-    var getValueEvent = 'getValue';
+    value = me.applyHooks('getValue', value);
 
-    me.listeners(getValueEvent).forEach(function (listener) {
+    return value;
+};
+
+prototype.applyHooks = function (eventName, value) {
+    var me = this;
+
+    me.listeners(eventName).forEach(function (listener) {
+        debugger;
         if (_.isFunction(listener)) {
-            val = listener.call(me, val);
+            value = listener.call(me, value);
         } else {
-            console.error('Bad listener for getValue event for ' + me.getName());
+            console.error('Bad listener for ' + eventName + ': ' + listener);
         }
     });
 
-    return val;
+    return value;
 };
 
 prototype._getSimpleValue = function () {
