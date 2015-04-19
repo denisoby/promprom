@@ -1,5 +1,7 @@
 <?php
 
+exit("Sorry, mail is disabled");
+
 class app{
     public static function trigger_error($str){
         echo $str;
