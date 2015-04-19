@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="Lodash" type="javaScript">
+    <properties>
+      <sourceFilesUrls>
+        <item url="file://C:/projects/libs/lodash-3.1.0.js" />
+      </sourceFilesUrls>
+    </properties>
+    <CLASSES>
+      <root url="file://C:/projects/libs/lodash-3.1.0.js" />
+    </CLASSES>
+    <DOCUMENTATION>
+      <root url="http://devdocs.io/lodash/" />
+    </DOCUMENTATION>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
