@@ -15,6 +15,9 @@ keystone.init({
 	'name': 'PrompromSite',
 	'brand': 'PrompromSite',
 	
+	'host': '127.0.0.1',
+	'port': '3003',
+	
 	'mongo': 'mongodb://127.0.0.1/promprom',
 	
 	'less': 'public',
