@@ -15,6 +15,11 @@ keystone.init({
 	'name': 'PrompromSite',
 	'brand': 'PrompromSite',
 	
+	'host': '127.0.0.1',
+	'port': '3003',
+	
+	'mongo': 'mongodb://127.0.0.1/promprom',
+	
 	'less': 'public',
 	'static': 'public',
 	'favicon': 'public/favicon.ico',
@@ -22,8 +27,8 @@ keystone.init({
 	'view engine': 'hbs',
 	
 	'custom engine': handlebars.create({
-		layoutsDir: 'templates/views/layouts',
-		partialsDir: 'templates/views/partials',
+		layoutsDir: 'ui/templates/views/layouts',
+		partialsDir: 'ui/templates/views/partials',
 		defaultLayout: 'default',
 		helpers: new require('./templates/views/helpers')(),
 		extname: '.hbs'
